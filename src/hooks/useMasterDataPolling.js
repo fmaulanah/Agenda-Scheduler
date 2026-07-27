@@ -3,7 +3,11 @@ import { useEffect, useRef } from "react";
 import employeeService from "../services/employeeService";
 import koreanService from "../services/koreanService";
 
-const POLLING_INTERVAL = 30 * 60 * 1000;
+import { setStorage } from "../utils/storage";
+import STORAGE_KEYS from "../utils/storageKeys";
+
+// const POLLING_INTERVAL = 30 * 60 * 1000;
+const POLLING_INTERVAL = 10 * 60 * 1000;
 
 function useMasterDataPolling() {
 
@@ -29,6 +33,13 @@ function useMasterDataPolling() {
                     koreanService.refreshKoreans()
 
                 ]);
+
+                setStorage(
+
+                    STORAGE_KEYS.USER_LAST_SYNC,
+                    new Date().toISOString()
+
+                );
 
                 console.log("Master data refreshed.");
 
