@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect, useRef} from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import dayjs from "dayjs";
 
 import { Typography, Box } from "@mui/material";
@@ -35,7 +35,7 @@ function Attendance() {
     const [confirmUploadOpen, setConfirmUploadOpen] = useState(false);
     const [pendingAgenda, setPendingAgenda] = useState(null);
     const [pendingStatus, setPendingStatus] = useState(null);
-    const [attendanceSummary, setAttendanceSummary] = useState({scanIn: 0, scanOut: 0});
+    const [attendanceSummary, setAttendanceSummary] = useState({ scanIn: 0, scanOut: 0 });
 
     const { showSnackbar } = useSnackbar();
 
@@ -50,7 +50,7 @@ function Attendance() {
     );
 
     const loadAgenda = async (showLoading = true) => {
-        
+
         if (showLoading) {
 
             setLoading(true);
@@ -58,7 +58,7 @@ function Attendance() {
         }
 
         try {
-            
+
             const result = await attendanceService.getAgendas(
 
                 month.format("YYYYMM")
@@ -158,13 +158,13 @@ function Attendance() {
 
         const agenda = agendas.find(
 
-            item=>item.id===queue.scheduleId
+            item => item.id === queue.scheduleId
 
         );
-        
+
         if (!agenda) {
 
-            
+
 
             attendanceQueue.clearQueue();
 
@@ -175,7 +175,7 @@ function Attendance() {
         setSelectedAgenda(agenda);
 
         console.log("Status :", queue.status);
-        setScanType( queue.status === "SCAN_IN" ? "IN" : "OUT" );
+        setScanType(queue.status === "SCAN_IN" ? "IN" : "OUT");
         setDialogOpen(true);
 
         showSnackbar(
@@ -212,7 +212,7 @@ function Attendance() {
             return;
 
         }
-        
+
         setMonth(current =>
 
             current.year(Number(event.target.value))
@@ -383,7 +383,7 @@ function Attendance() {
 
         setSelectedAgenda(agenda);
 
-        
+
 
     };
 
@@ -478,7 +478,7 @@ function Attendance() {
         }
 
     };
-    
+
     useEffect(() => {
 
         loadAgenda();
@@ -497,7 +497,7 @@ function Attendance() {
 
     }, [month, dialogOpen]);
 
-    
+
 
     useEffect(() => {
 

@@ -1,6 +1,8 @@
-import { Dialog, DialogActions, DialogContent, DialogTitle, MenuItem,
-         TextField, FormControlLabel, Checkbox, Switch, Typography, IconButton,
-         Radio, RadioGroup, FormLabel, FormControl  } from "@mui/material";
+import {
+    Dialog, DialogActions, DialogContent, DialogTitle, MenuItem,
+    TextField, FormControlLabel, Checkbox, Switch, Typography, IconButton,
+    Radio, RadioGroup, FormLabel, FormControl
+} from "@mui/material";
 
 import CircularProgress from "@mui/material/CircularProgress";
 import CloseIcon from "@mui/icons-material/Close";
@@ -10,10 +12,9 @@ import ConfirmDialog from "../../../components/common/ConfirmDialog";
 import LoadingOverlay from "../../../components/common/Loading/LoadingOverlay";
 
 function ScheduleAgendaDialog({ open, editingId, form, rooms, trainerError, saving,
-                                  confirmOpen, setConfirmOpen, isDirty, setIsDirty,
-                                  onChange, onSearchTrainer, onTrainerKeyDown, onClose, 
-                                  onSubmit, onUseYnChange, }) 
-{
+    confirmOpen, setConfirmOpen, isDirty, setIsDirty,
+    onChange, onSearchTrainer, onTrainerKeyDown, onClose,
+    onSubmit, onUseYnChange, }) {
     const handleClose = () => {
 
         if (!isDirty) {
@@ -44,8 +45,8 @@ function ScheduleAgendaDialog({ open, editingId, form, rooms, trainerError, savi
                     display: "flex",
                     justifyContent: "space-between",
                     alignitems: "center",
-                    fontWeight:600,
-                    variant:"h6"
+                    fontWeight: 600,
+                    variant: "h6"
                 }}
             >
 
@@ -192,19 +193,21 @@ function ScheduleAgendaDialog({ open, editingId, form, rooms, trainerError, savi
                         value={form.scanOutYn}
                         onChange={onChange}
                     >
+
                         <FormControlLabel
                             value="Y"
                             control={<Radio />}
-                            label="Scan In & Scan Out"
+                            label="Sekali Scan"
                             disabled={saving}
                         />
 
                         <FormControlLabel
                             value="N"
                             control={<Radio />}
-                            label="Sekali Scan"
+                            label="Scan In & Scan Out"
                             disabled={saving}
                         />
+
                     </RadioGroup>
                 </FormControl>
 
