@@ -195,14 +195,14 @@ function ScheduleAgendaDialog({ open, editingId, form, rooms, trainerError, savi
                     >
 
                         <FormControlLabel
-                            value="Y"
+                            value="N"
                             control={<Radio />}
                             label="Sekali Scan"
                             disabled={saving}
                         />
 
                         <FormControlLabel
-                            value="N"
+                            value="Y"
                             control={<Radio />}
                             label="Scan In & Scan Out"
                             disabled={saving}

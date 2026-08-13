@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import {Box, Chip, Typography} from "@mui/material";
+import { Box, Chip, Typography } from "@mui/material";
 import dayjs from "dayjs";
 
 import AddIcon from "@mui/icons-material/Add";
@@ -45,7 +45,7 @@ const initialForm = {
     trainerName: "",
     memo: "",
     useYn: "Y",
-    scanOutYn: "Y"
+    scanOutYn: "N"
 
 };
 
@@ -327,7 +327,7 @@ function Schedule() {
             console.error(err);
 
             showSnackbar(
-                
+
                 "Gagal menyimpan agenda.",
                 "error"
 
@@ -452,7 +452,7 @@ function Schedule() {
         }
 
         setEditingId(selectedAgenda.id);
-        
+
         setForm({
             title: selectedAgenda.title,
             startDate: selectedAgenda.startDate,
@@ -464,7 +464,7 @@ function Schedule() {
             useYn: selectedAgenda.useYn ?? "Y",
             scanOutYn: selectedAgenda.scanOutYn ?? "Y"
         });
-        
+
         setSelectedAgenda(null);
         setDialogOpen(true);
     };
@@ -542,7 +542,7 @@ function Schedule() {
                         }}
                     >
 
-                        <ScheduleToolbar 
+                        <ScheduleToolbar
                             month={month}
                             MONTHS={MONTHS}
                             YEARS={YEARS}
