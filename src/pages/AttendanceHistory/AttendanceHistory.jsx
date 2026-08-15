@@ -31,8 +31,8 @@ function AttendanceHistory() {
 
     const [filter, setFilter] = useState({
 
-        fromDate: dayjs().startOf("month").format("YYYY-MM-DD"),
-        toDate: dayjs().endOf("month") .format("YYYY-MM-DD"),
+        fromDate: dayjs().format("YYYY-MM-DD"),
+        toDate: dayjs().endOf("month").format("YYYY-MM-DD"),
         agenda: "",
         trainer: "",
         status: ""
@@ -98,7 +98,7 @@ function AttendanceHistory() {
 
     useEffect(() => {
 
-        setView( isMobile? "list" : "table" );
+        setView(isMobile ? "list" : "table");
 
     }, [isMobile]);
 
@@ -181,7 +181,7 @@ function AttendanceHistory() {
                 open={detailOpen}
                 onClose={handleCloseDetail}
                 agenda={selectedAgenda}
-                
+
             />
 
         </Box>

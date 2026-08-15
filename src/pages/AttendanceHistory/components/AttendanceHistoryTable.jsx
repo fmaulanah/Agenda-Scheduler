@@ -24,7 +24,7 @@ import EmptyState from "../../../components/common/Empty/EmptyState";
 
 function AttendanceHistoryTable({ rows, loading, onDetail }) {
 
-    
+
     const columns = [
 
         {
@@ -62,7 +62,7 @@ function AttendanceHistoryTable({ rows, loading, onDetail }) {
 
             renderCell: ({ row }) => {
 
-                const status = formatStatus( row.ABSENT_STATUS );
+                const status = formatStatus(row.ABSENT_STATUS);
 
                 return (
 
@@ -170,7 +170,7 @@ function AttendanceHistoryTable({ rows, loading, onDetail }) {
 
         <Card
             sx={{
-                borderRadius:3
+                borderRadius: 3
             }}
         >
 
@@ -236,11 +236,11 @@ function AttendanceHistoryTable({ rows, loading, onDetail }) {
                                         getRowId={(row) => row.SCHEDULE_ID}
                                         autoHeight
                                         disableRowSelectionOnClick
-                                        pageSizeOptions={[10, 25, 50]}
+                                        pageSizeOptions={[5, 10, 25]}
                                         initialState={{
                                             pagination: {
                                                 paginationModel: {
-                                                    pageSize: 10
+                                                    pageSize: 5
                                                 }
                                             }
                                         }}

@@ -1,12 +1,24 @@
 import dayjs from "dayjs";
 
-import { Box, Dialog, DialogActions, DialogContent, DialogTitle, Typography, Divider, Chip} from "@mui/material";
+import { Box, Dialog, DialogActions, DialogContent, DialogTitle, Typography, Divider, Chip } from "@mui/material";
+
+import { useAuth } from "../../../context/AuthContext";
 
 import AppButton from "../../../components/common/Button/AppButton";
 
-function ScheduleAgendaDetailDialog({ agenda, rooms, open, onClose, onEdit }) 
-{
-    const roomName = agenda ? rooms.find(room => room.ROOM_ID === agenda.room)?.ROOM_NM ?? agenda.room : "";
+function ScheduleAgendaDetailDialog({ agenda, rooms, open, onClose, onEdit }) {
+
+    const { user } = useAuth();
+
+    const roomName = agenda
+        ? rooms.find(
+            room => room.ROOM_ID === agenda.room
+        )?.ROOM_NM ?? agenda.room
+        : "";
+
+    const canEdit =
+        agenda &&
+        String(user?.EMPID ?? "") === String(agenda.trainerId);
 
     const DetailItem = ({ label, value }) => (
 
@@ -145,11 +157,12 @@ function ScheduleAgendaDetailDialog({ agenda, rooms, open, onClose, onEdit })
 
                 <AppButton
                     onClick={onEdit}
-                    disabled={agenda?.absentStatus === "F"}
+                    disabled={
+                        !canEdit ||
+                        agenda?.absentStatus === "F"
+                    }
                 >
-
                     Edit Agenda
-
                 </AppButton>
 
             </DialogActions>
@@ -159,5 +172,5 @@ function ScheduleAgendaDetailDialog({ agenda, rooms, open, onClose, onEdit })
     );
 
 }
-    
+
 export default ScheduleAgendaDetailDialog;

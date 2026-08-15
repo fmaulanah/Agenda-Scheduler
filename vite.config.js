@@ -18,5 +18,6 @@ export default defineConfig({
         }
 
     },
-    base: '/Agenda/'
+    // base: '/Agenda/'
+    base: '/AgendaIphone/'
 });

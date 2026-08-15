@@ -6,15 +6,22 @@ const attendanceService = {
 
     async getAgendas(month) {
 
+        const loginUser = JSON.parse(
+
+            localStorage.getItem("csg_user")
+
+        );
+
         return await systemApiService.execute({
 
             apiCd: "COMBO_TRAINING",
             type: "SEARCH",
-            param01: month
+            param01: month,
+            param02: loginUser?.EMPID ?? ""
 
         });
 
-    }, 
+    },
 
     async getProgress(scheduleId, scanType) {
 
@@ -28,7 +35,7 @@ const attendanceService = {
         });
 
     },
-    
+
     async getAttendanceSummary(scheduleId) {
 
         return await systemApiService.execute({
