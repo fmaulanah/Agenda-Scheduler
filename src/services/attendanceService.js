@@ -63,7 +63,7 @@ const attendanceService = {
             param01: scan.SCAN_DATE,
             param02: dayjs(scan.SCAN_DTTM).format("YYYY-MM-DD HH:mm:ss"),
             param03: scan.SCAN_TYPE,
-            param04: scan.SCAN_RF_ID,
+            param04: scan.SCAN_RF_ID ?? "",
             param05: scan.SCAN_EMPID,
             param06: scan.SCAN_EMP_NM,
             param07: scan.SCAN_POSITION,
