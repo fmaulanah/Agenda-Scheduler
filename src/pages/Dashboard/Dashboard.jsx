@@ -2,7 +2,7 @@ import dayjs from "dayjs";
 
 import { useNavigate } from "react-router-dom";
 import { useEffect, useMemo, useState } from "react";
-import {Box, Chip, Divider, List, ListItem, ListItemText, Typography, Grid} from "@mui/material";
+import { Box, Chip, Divider, List, ListItem, ListItemText, Typography, Grid } from "@mui/material";
 
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
@@ -27,7 +27,7 @@ function Dashboard() {
 
     const navigate = useNavigate();
 
-    const today        = dayjs().format("YYYY-MM-DD");
+    const today = dayjs().format("YYYY-MM-DD");
     const currentMonth = dayjs().format("YYYYMM");
 
     const [rooms, setRooms] = useState([]);
@@ -47,9 +47,8 @@ function Dashboard() {
     const { isMobile } = useResponsive();
 
     const upcomingAgendas = agendas.filter(agenda => agenda.useYn === "Y" &&
-                                                           agenda.startDate >= today &&
-                                                           dayjs(agenda.startDate).format("YYYYMM") === currentMonth)
-                                                .sort((a, b) => a.startDate.localeCompare(b.startDate));
+        agenda.startDate == today && agenda.status == null)
+        .sort((a, b) => a.startDate.localeCompare(b.startDate));
 
     const loadMonthlyChart = async () => {
 
@@ -108,7 +107,7 @@ function Dashboard() {
 
     };
 
-    const loadRooms = async () => { 
+    const loadRooms = async () => {
 
         try {
 
@@ -141,7 +140,8 @@ function Dashboard() {
                     trainerId: item.TRAINER_EMPID,
                     trainerName: item.TRAINER_EMP_NM,
                     memo: item.MEMO,
-                    useYn: item.USE_YN
+                    useYn: item.USE_YN,
+                    status: item.ABSENT_STATUS //2026.08.24 it.fikri
 
                 }))
 
@@ -225,7 +225,7 @@ function Dashboard() {
 
                 />
 
-                <DashboardSkeleton/>
+                <DashboardSkeleton />
 
             </>
 
@@ -251,7 +251,7 @@ function Dashboard() {
                     <DashboardStat
                         title="Schedule Bulan Ini"
                         value={summary.thisMonth}
-                        //icon={<CalendarMonthIcon fontSize="large" />}
+                    //icon={<CalendarMonthIcon fontSize="large" />}
                     />
                 </Grid>
 

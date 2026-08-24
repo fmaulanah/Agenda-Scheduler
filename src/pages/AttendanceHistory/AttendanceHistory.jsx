@@ -32,7 +32,7 @@ function AttendanceHistory() {
     const [filter, setFilter] = useState({
 
         fromDate: dayjs().format("YYYY-MM-DD"),
-        toDate: dayjs().endOf("month").format("YYYY-MM-DD"),
+        toDate: dayjs().format("YYYY-MM-DD"),
         agenda: "",
         trainer: "",
         status: ""
