@@ -1,16 +1,49 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Chip, Typography } from "@mui/material";
+import { useEffect, useState } from "react";
 import dayjs from "dayjs";
 
-function ScheduleCalendar({ month, calendarDays, agendas, holidaySet, onSelectAgenda, onShowMore }) 
-{
+function ScheduleCalendar({ month, calendarDays, agendas, holidaySet, onSelectAgenda, onShowMore }) {
 
-    const WEEKDAYS = [ "Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab" ];
+    const WEEKDAYS = ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"];
+
+    const [focusedDayIndex, setFocusedDayIndex] = useState(null);
+
+    useEffect(() => {
+        const handler = (e) => {
+            const key = e.key;
+            if (key === "ArrowRight" || key === "ArrowLeft") {
+                e.preventDefault();
+                const step = key === "ArrowRight" ? 1 : -1;
+                const newIdx = (focusedDayIndex ?? 0) + step;
+                if (newIdx >= 0 && newIdx < calendarDays.length) {
+                    setFocusedDayIndex(newIdx);
+                } else {
+                    setFocusedDayIndex(null);
+                }
+            }
+            if (key === "Enter" && focusedDayIndex !== null) {
+                const date = calendarDays[focusedDayIndex];
+                if (date) {
+                    const dayAgendas = agendas.filter(item => item.startDate === date);
+                    if (dayAgendas.length > 0) {
+                        // open day dialog with first agenda or just select first
+                        onSelectAgenda(dayAgendas[0]);
+                    }
+                }
+            }
+            if (key === "Escape") {
+                setFocusedDayIndex(null);
+            }
+        };
+        document.addEventListener("keydown", handler);
+        return () => document.removeEventListener("keydown", handler);
+    }, [focusedDayIndex, calendarDays, agendas, onSelectAgenda]);
 
     return (
 
         <Box
             sx={{
-                p:2,
+                p: 2,
                 display: "grid",
                 gridTemplateColumns: "repeat(7, minmax(0, 1fr))"
             }}
@@ -55,26 +88,29 @@ function ScheduleCalendar({ month, calendarDays, agendas, holidaySet, onSelectAg
                 const isHoliday = holidaySet.has(date);
 
                 return (
-
                     <Box
                         key={`${day ?? "empty"}-${index}`}
+                        tabIndex={day ? 0 : -1}
+                        role="gridcell"
+                        aria-label={date ? dayjs(date).format("DD MMMM YYYY") : ""}
                         sx={{
-                            minHeight: {
-                                xs: 90,
-                                // md: 125
-                            },
+                            minHeight: { xs: 80 },
                             p: 1,
                             borderRight: (index + 1) % 7 === 0 ? 0 : 1,
                             borderBottom: 1,
                             borderColor: "divider",
-                            bgcolor: !day ? "grey.50" : isHoliday ? "#FFF5F5" : "background.paper"
+                            bgcolor: !day ? "grey.50" : isHoliday ? "#FFF5F5" : "background.paper",
+                            outline: focusedDayIndex === index ? "2px solid" : "none",
+                            outlineColor: "primary.main",
+                            "&:focus": {
+                                outline: "2px solid",
+                                outlineColor: "primary.main"
+                            }
                         }}
                     >
-
                         {day && (
 
                             <>
-
                                 <Box
                                     sx={{
                                         width: 30,
@@ -88,15 +124,12 @@ function ScheduleCalendar({ month, calendarDays, agendas, holidaySet, onSelectAg
                                         color: isToday ? "white" : isHoliday ? "error.main" : "text.primary"
                                     }}
                                 >
-
                                     <Typography
                                         variant="body2"
-                                        fontWeight={ isToday || isHoliday ? 700 : 400 }
-                                        color={ isToday ? "white" : isHoliday ? "error.main" : "text.primary" }
+                                        fontWeight={isToday || isHoliday ? 700 : 400}
+                                        color={isToday ? "white" : isHoliday ? "error.main" : "text.primary"}
                                     >
-
                                         {day}
-
                                     </Typography>
 
                                 </Box>
@@ -112,55 +145,33 @@ function ScheduleCalendar({ month, calendarDays, agendas, holidaySet, onSelectAg
                                             bgcolor: agenda.useYn === "Y" ? "primary.main" : "grey.500",
                                             color: "white",
                                             cursor: "pointer",
-                                            "&:hover": {
-                                                bgcolor: agenda.useYn === "Y" ? "primary.dark" : "grey.600"
-                                            }
+                                            "&:hover": { bgcolor: agenda.useYn === "Y" ? "primary.dark" : "grey.600" }
                                         }}
                                     >
-                                        <Typography
-                                            variant="caption"
-                                            sx={{
-                                                display: "block",
-                                                fontWeight: 700
-                                            }}
-                                        >
-                                            {agenda.title}
-                                        </Typography>
-
-                                        <Typography
-                                            variant="caption"
-                                            sx={{
-                                                display: "block",
-                                                opacity: .8
-                                            }}
-                                        >
-                                            {agenda.trainerName}
-                                        </Typography>
+                                        <Typography variant="caption" sx={{ display: "block", fontWeight: 700 }}>{agenda.title}</Typography>
+                                        <Typography variant="caption" sx={{ display: "block", opacity: .8 }}>{agenda.trainerName}</Typography>
                                     </Box>
-
                                 ))}
 
                                 {hiddenCount > 0 && (
-
-                                    <Typography
-                                        variant="caption"
-                                        onClick={() => { onShowMore(date, dayAgendas) }}
+                                    <Chip
+                                        label={`+${hiddenCount} lainnya`}
+                                        size="small"
+                                        color="primary"
+                                        variant="outlined"
+                                        onClick={() => onShowMore(date, dayAgendas)}
                                         sx={{
-                                            display: "block",
-                                            mt: .5,
-                                            color: "primary.main",
-                                            fontWeight: 700,
+                                            mt: 0.5,
+                                            fontSize: "0.65rem",
+                                            height: 22,
                                             cursor: "pointer",
                                             "&:hover": {
-                                                textDecoration: "underline"
+                                                bgcolor: "primary.main",
+                                                color: "black",
+                                                borderColor: "primary.main"
                                             }
                                         }}
-                                    >
-
-                                        +{hiddenCount} lainnya
-
-                                    </Typography>
-
+                                    />
                                 )}
 
                             </>
@@ -168,7 +179,6 @@ function ScheduleCalendar({ month, calendarDays, agendas, holidaySet, onSelectAg
                         )}
 
                     </Box>
-
                 );
 
             })}

@@ -8,8 +8,10 @@ import Schedule from "../pages/Schedule/Schedule";
 import Attendt from "../pages/Attendance/Attendance";
 import AttendanceHist from "../pages/AttendanceHistory/AttendanceHistory"
 import System from "../pages/System/System";
+import UserManagement from "../pages/UserManagement/UserManagement";
 import ProtectedRoute from "./ProtectedRoute";
 import PublicRoute from "./PublicRoute";
+import { AdminRoute } from "./ProtectedRoute";
 
 function AppRoutes() {
 
@@ -66,6 +68,15 @@ function AppRoutes() {
                 <Route
                     path="/system"
                     element={<System />}
+                />
+
+                <Route
+                    path="/user-management"
+                    element={
+                        <AdminRoute>
+                            <UserManagement />
+                        </AdminRoute>
+                    }
                 />
 
             </Route>

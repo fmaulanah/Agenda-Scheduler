@@ -1,6 +1,7 @@
-import { useEffect, useMemo, useState } from "react";
+import { lazy, Suspense, useEffect, useMemo, useState } from "react";
 import { Box, Chip, Typography } from "@mui/material";
 import dayjs from "dayjs";
+import { DndContext, PointerSensor, KeyboardSensor, useSensor, useSensors } from "@dnd-kit/core";
 
 import AddIcon from "@mui/icons-material/Add";
 
@@ -12,9 +13,10 @@ import ScheduleSkeleton from "../../components/common/Loading/ScheduleSkeleton";
 import ScheduleToolbar from "./components/ScheduleToolbar";
 import ScheduleCalendar from "./components/ScheduleCalendar";
 import ScheduleList from "./components/ScheduleList";
-import ScheduleDayDialog from "./components/ScheduleDayDialog";
-import ScheduleAgendaDialog from "./components/ScheduleAgendaDialog";
-import ScheduleAgendaDetailDialog from "./components/ScheduleAgendaDetailDialog";
+
+const ScheduleDayDialog = lazy(() => import("./components/ScheduleDayDialog"));
+const ScheduleAgendaDialog = lazy(() => import("./components/ScheduleAgendaDialog"));
+const ScheduleAgendaDetailDialog = lazy(() => import("./components/ScheduleAgendaDetailDialog"));
 
 import calendarService from "../../services/calendarService";
 import trainerService from "../../services/trainerService";
@@ -69,6 +71,31 @@ function Schedule() {
 
     const { isMobile } = useResponsive();
     const { showSnackbar } = useSnackbar();
+
+    const dndSensors = useSensors(
+        useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
+        useSensor(KeyboardSensor)
+    );
+
+    const handleDragEnd = async (event) => {
+        const { active, over } = event;
+        if (!over || active.id === over.id) return;
+        const draggedAgenda = active.data.current?.agenda;
+        const targetDate = over.data.current?.date;
+        if (!draggedAgenda || !targetDate) return;
+        const oldDate = draggedAgenda.startDate;
+        if (oldDate === targetDate) return;
+        const diffDays = dayjs(draggedAgenda.endDate).diff(dayjs(draggedAgenda.startDate), "day");
+        const newEndDate = dayjs(targetDate).add(diffDays, "day").format("YYYY-MM-DD");
+        setAgendas(prev => prev.map(a => a.id === draggedAgenda.id ? { ...a, startDate: targetDate, endDate: newEndDate } : a));
+        try {
+            await agendaService.updateAgenda(draggedAgenda.id, { ...draggedAgenda, startDate: targetDate, endDate: newEndDate }, roomMap[draggedAgenda.room]);
+            showSnackbar("Agenda berhasil dipindahkan.", "success");
+        } catch {
+            setAgendas(prev => prev.map(a => a.id === draggedAgenda.id ? { ...a, startDate: oldDate, endDate: draggedAgenda.endDate } : a));
+            showSnackbar("Gagal memindahkan agenda.", "error");
+        }
+    };
 
     const [dayDialog, setDayDialog] = useState({
 
@@ -536,9 +563,7 @@ function Schedule() {
 
                     <Box
                         sx={{
-                            // mb: 2
-                            // flex: 1,
-                            // display: "flex"
+                            mb: 1.5
                         }}
                     >
 
@@ -555,8 +580,7 @@ function Schedule() {
 
                     <Box
                         sx={{
-                            // flex: 1,
-                            // display: "flex"
+                            mt: 0
                         }}
                     >
 
@@ -572,94 +596,99 @@ function Schedule() {
 
             ) : (
 
-                <AppCard
-                    title=' '
-                    action={
-                        <ScheduleToolbar
+                <DndContext sensors={dndSensors} onDragEnd={handleDragEnd}>
+                    <AppCard
+                        title=' '
+                        action={
+                            <ScheduleToolbar
+                                month={month}
+                                MONTHS={MONTHS}
+                                YEARS={YEARS}
+                                setMonth={setMonth}
+                                onAddAgenda={openCreateDialog}
+                                onRefresh={loadAgenda}
+                            />
+                        }
+                        sx={{
+                            "& .MuiCardContent-root": {
+                                p: 0
+                            }
+                        }}
+                    >
+                        <ScheduleCalendar
                             month={month}
-                            MONTHS={MONTHS}
-                            YEARS={YEARS}
-                            setMonth={setMonth}
-                            onAddAgenda={openCreateDialog}
-                            onRefresh={loadAgenda}
+                            calendarDays={calendarDays}
+                            agendas={monthlyAgendas}
+                            holidaySet={holidaySet}
+                            onSelectAgenda={setSelectedAgenda}
+                            onShowMore={(date, agendas) =>
+                                setDayDialog({
+                                    open: true,
+                                    date,
+                                    agendas
+                                })
+                            }
                         />
-                    }
-                    sx={{
-                        "& .MuiCardContent-root": {
-                            p: 0
-                        }
-                    }}
-                >
-                    <ScheduleCalendar
-                        month={month}
-                        calendarDays={calendarDays}
-                        agendas={agendas}
-                        holidaySet={holidaySet}
-                        onSelectAgenda={setSelectedAgenda}
-                        onShowMore={(date, agendas) =>
-                            setDayDialog({
-
-                                open: true,
-                                date,
-                                agendas
-                            })
-                        }
-                    />
-                </AppCard>
+                    </AppCard>
+                </DndContext>
 
             )}
 
-            <ScheduleAgendaDialog
-                open={dialogOpen}
-                editingId={editingId}
-                form={form}
-                rooms={rooms}
-                trainerError={trainerError}
-                confirmOpen={confirmOpen}
-                setConfirmOpen={setConfirmOpen}
-                isDirty={isDirty}
-                setIsDirty={setIsDirty}
-                onChange={handleChange}
-                onSearchTrainer={handleSearchTrainer}
-                onTrainerKeyDown={handleTrainerKeyDown}
-                onSubmit={handleSubmit}
-                onUseYnChange={handleUseYnChange}
-                onClose={closeFormDialog}
-            />
+            <Suspense fallback={<ScheduleSkeleton />}>
+                <ScheduleAgendaDialog
+                    open={dialogOpen}
+                    editingId={editingId}
+                    form={form}
+                    rooms={rooms}
+                    trainerError={trainerError}
+                    confirmOpen={confirmOpen}
+                    setConfirmOpen={setConfirmOpen}
+                    isDirty={isDirty}
+                    setIsDirty={setIsDirty}
+                    onChange={handleChange}
+                    onSearchTrainer={handleSearchTrainer}
+                    onTrainerKeyDown={handleTrainerKeyDown}
+                    onSubmit={handleSubmit}
+                    onUseYnChange={handleUseYnChange}
+                    onClose={closeFormDialog}
+                />
 
-            <ScheduleAgendaDetailDialog
-                agenda={selectedAgenda}
-                rooms={rooms}
-                open={Boolean(selectedAgenda)}
-                onClose={() => setSelectedAgenda(null)}
-                onEdit={openEditDialog}
-            />
+                <ScheduleAgendaDetailDialog
+                    agenda={selectedAgenda}
+                    rooms={rooms}
+                    open={Boolean(selectedAgenda)}
+                    onClose={() => setSelectedAgenda(null)}
+                    onEdit={openEditDialog}
+                />
 
-            <ScheduleDayDialog
+                <ScheduleDayDialog
 
-                open={dayDialog.open}
+                    open={dayDialog.open}
 
-                date={dayDialog.date}
+                    date={dayDialog.date}
 
-                agendas={dayDialog.agendas}
+                    agendas={dayDialog.agendas}
 
-                onClose={() =>
+                    roomMap={roomMap}
 
-                    setDayDialog({
+                    onClose={() =>
 
-                        open: false,
+                        setDayDialog({
 
-                        date: "",
+                            open: false,
 
-                        agendas: []
+                            date: "",
 
-                    })
+                            agendas: []
 
-                }
+                        })
 
-                onSelectAgenda={setSelectedAgenda}
+                    }
 
-            />
+                    onSelectAgenda={setSelectedAgenda}
+
+                />
+            </Suspense>
         </>
     );
 }

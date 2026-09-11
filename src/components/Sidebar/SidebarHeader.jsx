@@ -4,7 +4,7 @@ import Logo from "../../assets/logo/logo.png";
 
 import { useAuth } from "../../context/AuthContext";
 
-function SidebarHeader() {
+function SidebarHeader({ isCollapsed = false }) {
     
     const { user } = useAuth();
 
@@ -13,8 +13,9 @@ function SidebarHeader() {
         <Box
             sx={{
                 textAlign: "center",
-                py: 4,
-                px: 2
+                py: isCollapsed ? 2 : 4,
+                px: 2,
+                display: isCollapsed ? "none" : "block"
             }}
         >
 

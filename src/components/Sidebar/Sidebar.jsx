@@ -1,7 +1,11 @@
-import { Box, Divider, List } from "@mui/material";
+import { Box, Divider, List, IconButton, Tooltip } from "@mui/material";
 import { useNavigate, useLocation } from "react-router-dom";
 
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+
 import { MENUS } from "../../constants/menu";
+import { useAuth } from "../../context/AuthContext";
 
 import SidebarHeader from "./SidebarHeader";
 import SidebarItem from "./SidebarItem";
@@ -13,11 +17,14 @@ import useLeaveGuard from "../../hooks/useLeaveGuard";
 
 import attendanceQueue from "../../utils/attendanceQueue";
 
-function Sidebar({ isMobile, onClose }) {
+function Sidebar({ isMobile, onClose, isCollapsed = false, onToggleCollapse }) {
 
     const navigate = useNavigate();
     const location = useLocation();
     const leaveGuard = useLeaveGuard();
+    const { user } = useAuth();
+
+    const visibleMenus = MENUS.filter(menu => !menu.adminOnly || user?.ROLE_ID === "ADMIN");
 
     const handleMenuClick = (path) => {
 
@@ -65,9 +72,28 @@ function Sidebar({ isMobile, onClose }) {
             }}
         >
 
-            <SidebarHeader/>
+            {!isMobile && onToggleCollapse && (
+                <Tooltip title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"} placement="right">
+                    <IconButton
+                        onClick={() => onToggleCollapse((prev) => !prev)}
+                        aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+                        size="small"
+                        sx={{
+                            alignSelf: isCollapsed ? "center" : "flex-end",
+                            mb: 0.5,
+                            border: 1,
+                            borderColor: "divider",
+                            bgcolor: "background.paper"
+                        }}
+                    >
+                        {isCollapsed ? <ChevronRightIcon fontSize="small" /> : <ChevronLeftIcon fontSize="small" />}
+                    </IconButton>
+                </Tooltip>
+            )}
 
-            <Divider/>
+            <SidebarHeader isCollapsed={!isMobile && isCollapsed}/>
+
+            {!isCollapsed && <Divider/>}
 
             <List
                 sx={{
@@ -77,7 +103,7 @@ function Sidebar({ isMobile, onClose }) {
                 }}
             >
 
-                {MENUS.map((menu)=>(
+                {visibleMenus.map((menu)=>(
 
                     <SidebarItem
 
@@ -90,6 +116,7 @@ function Sidebar({ isMobile, onClose }) {
                         selected={location.pathname===menu.path}
 
                         onClick={() => handleMenuClick(menu.path)}
+                        isCollapsed={!isMobile && isCollapsed}
 
                     />
 
@@ -97,7 +124,7 @@ function Sidebar({ isMobile, onClose }) {
 
             </List>
 
-            <SidebarFooter/>
+            <SidebarFooter isMobile={isMobile} isCollapsed={!isMobile && isCollapsed}/>
 
             <ConfirmDialog
 

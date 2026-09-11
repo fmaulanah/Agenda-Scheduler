@@ -83,6 +83,8 @@ const systemApiService = {
 
         };
 
+        console.log(params);
+
         const { data } = await api.get(
             "/systemAPI",
             {

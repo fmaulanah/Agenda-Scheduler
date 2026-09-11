@@ -6,6 +6,38 @@ import { useAuth } from "../../../context/AuthContext";
 
 import AppButton from "../../../components/common/Button/AppButton";
 
+const DetailItem = ({ label, value }) => (
+
+    <Box
+        sx={{
+            mb: 2.5
+        }}
+    >
+
+        <Typography
+            variant="h6"
+            fontWeight={200}
+            sx={{
+                mb: .5
+            }}
+        >
+
+            {label}
+
+        </Typography>
+
+        <Typography
+            variant="body1"
+        >
+
+            {value || "-"}
+
+        </Typography>
+
+    </Box>
+
+);
+
 function ScheduleAgendaDetailDialog({ agenda, rooms, open, onClose, onEdit }) {
 
     const { user } = useAuth();
@@ -19,38 +51,6 @@ function ScheduleAgendaDetailDialog({ agenda, rooms, open, onClose, onEdit }) {
     const canEdit =
         agenda &&
         String(user?.EMPID ?? "") === String(agenda.trainerId);
-
-    const DetailItem = ({ label, value }) => (
-
-        <Box
-            sx={{
-                mb: 2.5
-            }}
-        >
-
-            <Typography
-                variant="h6"
-                fontWeight={200}
-                sx={{
-                    mb: .5
-                }}
-            >
-
-                {label}
-
-            </Typography>
-
-            <Typography
-                variant="body1"
-            >
-
-                {value || "-"}
-
-            </Typography>
-
-        </Box>
-
-    );
 
     return (
 
