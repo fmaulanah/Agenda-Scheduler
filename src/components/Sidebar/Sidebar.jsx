@@ -1,8 +1,11 @@
-import { Box, Divider, List, IconButton, Tooltip } from "@mui/material";
+import { Box, Collapse, Divider, List, ListItemButton, ListItemIcon, ListItemText, IconButton, Tooltip } from "@mui/material";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useState } from "react";
 
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import ExpandLessIcon from "@mui/icons-material/ExpandLess";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 import { MENUS } from "../../constants/menu";
 import { useAuth } from "../../context/AuthContext";
@@ -24,7 +27,19 @@ function Sidebar({ isMobile, onClose, isCollapsed = false, onToggleCollapse }) {
     const leaveGuard = useLeaveGuard();
     const { user } = useAuth();
 
-    const visibleMenus = MENUS.filter(menu => !menu.adminOnly || user?.ROLE_ID === "ADMIN");
+    const isPathActive = (path) => location.pathname === path || location.pathname.startsWith(path + "/");
+    const visibleMenus = MENUS.map(menu => {
+        if (!menu.children) return (!menu.adminOnly || user?.ROLE_ID === "ADMIN") ? menu : null;
+        const children = menu.children.filter(c => !c.adminOnly || user?.ROLE_ID === "ADMIN");
+        if (!children.length) return null;
+        return { ...menu, children };
+    }).filter(Boolean);
+    const [openMap, setOpenMap] = useState(() => {
+        const init = {};
+        visibleMenus.forEach(m => { if (m.children?.some(c => isPathActive(c.path))) init[m.id] = true; });
+        return init;
+    });
+    const toggle = (id) => setOpenMap(prev => ({ ...prev, [id]: !prev[id] }));
 
     const handleMenuClick = (path) => {
 
@@ -61,7 +76,7 @@ function Sidebar({ isMobile, onClose, isCollapsed = false, onToggleCollapse }) {
 
     };
 
-    return(
+    return (
 
         <Box
             sx={{
@@ -91,9 +106,9 @@ function Sidebar({ isMobile, onClose, isCollapsed = false, onToggleCollapse }) {
                 </Tooltip>
             )}
 
-            <SidebarHeader isCollapsed={!isMobile && isCollapsed}/>
+            <SidebarHeader isCollapsed={!isMobile && isCollapsed} />
 
-            {!isCollapsed && <Divider/>}
+            {!isCollapsed && <Divider />}
 
             <List
                 sx={{
@@ -103,28 +118,70 @@ function Sidebar({ isMobile, onClose, isCollapsed = false, onToggleCollapse }) {
                 }}
             >
 
-                {visibleMenus.map((menu)=>(
-
-                    <SidebarItem
-
-                        key={menu.id}
-
-                        title={menu.title}
-
-                        icon={menu.icon}
-
-                        selected={location.pathname===menu.path || location.pathname.startsWith(menu.path + "/")}
-
-                        onClick={() => handleMenuClick(menu.path)}
-                        isCollapsed={!isMobile && isCollapsed}
-
-                    />
-
-                ))}
+                {visibleMenus.map((menu) => {
+                    if (!menu.children) {
+                        return (
+                            <SidebarItem
+                                key={menu.id}
+                                title={menu.title}
+                                icon={menu.icon}
+                                selected={isPathActive(menu.path)}
+                                onClick={() => handleMenuClick(menu.path)}
+                                isCollapsed={isCollapsed}
+                            />
+                        );
+                    }
+                    const isParentActive = menu.children.some(c => isPathActive(c.path));
+                    const open = !!openMap[menu.id];
+                    const ParentIcon = menu.icon;
+                    return (
+                        <Box key={menu.id}>
+                            <ListItemButton
+                                selected={isParentActive}
+                                aria-expanded={open}
+                                aria-current={isParentActive ? "page" : undefined}
+                                onClick={() => toggle(menu.id)}
+                                sx={{
+                                    mx: 1, my: 0.5, borderRadius: 2,
+                                    "&.Mui-selected": { bgcolor: "primary.main", color: "white", "& .MuiListItemIcon-root": { color: "white" } },
+                                    "&:hover:not(.Mui-selected)": { bgcolor: "primary.light", color: "white", "& .MuiListItemIcon-root": { color: "white" } }
+                                }}
+                            >
+                                <ListItemIcon sx={{ minWidth: 40, color: "inherit" }}><ParentIcon /></ListItemIcon>
+                                {!isCollapsed && <ListItemText primary={menu.title} />}
+                                {!isCollapsed && (open ? <ExpandLessIcon fontSize="small" /> : <ExpandMoreIcon fontSize="small" />)}
+                            </ListItemButton>
+                            <Collapse in={open && !isCollapsed} timeout="auto" unmountOnExit>
+                                <List dense disablePadding sx={{ pl: 1 }}>
+                                    {menu.children.map((child) => {
+                                        const ChildIcon = child.icon;
+                                        const selected = isPathActive(child.path);
+                                        return (
+                                            <ListItemButton
+                                                key={child.path}
+                                                selected={selected}
+                                                aria-current={selected ? "page" : undefined}
+                                                onClick={() => handleMenuClick(child.path)}
+                                                sx={{
+                                                    mx: 1, my: 0.25, borderRadius: 2, pl: 4,
+                                                    "&.Mui-selected": { bgcolor: "primary.main", color: "white", "& .MuiListItemIcon-root": { color: "white" } },
+                                                    "&:hover:not(.Mui-selected)": { bgcolor: "primary.light", color: "white", "& .MuiListItemIcon-root": { color: "white" } }
+                                                }}
+                                            >
+                                                {ChildIcon && <ListItemIcon sx={{ minWidth: 32, color: "inherit" }}><ChildIcon fontSize="small" /></ListItemIcon>}
+                                                <ListItemText primary={child.title} primaryTypographyProps={{ variant: "body2", fontWeight: selected ? 600 : 400 }} />
+                                            </ListItemButton>
+                                        );
+                                    })}
+                                </List>
+                            </Collapse>
+                        </Box>
+                    );
+                })}
 
             </List>
 
-            <SidebarFooter isMobile={isMobile} isCollapsed={!isMobile && isCollapsed}/>
+            <SidebarFooter isMobile={isMobile} isCollapsed={!isMobile && isCollapsed} />
 
             <ConfirmDialog
 

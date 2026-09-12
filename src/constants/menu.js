@@ -22,25 +22,18 @@ export const MENUS = [
         id: 3,
         title: "Attendance",
         icon: AssignmentOutlinedIcon,
-        path: "/attendance"
-    },
-    {
-        id: 4,
-        title: "Attendance History",
-        icon: HistoryEduIcon,
-        path: "/attendance-history"
+        children: [
+            { title: "Scan", path: "/attendance", icon: AssignmentOutlinedIcon },
+            { title: "History", path: "/attendance-history", icon: HistoryEduIcon }
+        ]
     },
     {
         id: 5,
         title: "System",
         icon: SettingsIcon,
-        path: "/system"
-    },
-    {
-        id: 6,
-        title: "User Management",
-        icon: ManageAccountsIcon,
-        path: "/user-management",
-        adminOnly: true
+        children: [
+            { title: "Overview", path: "/system", icon: SettingsIcon },
+            { title: "User Management", path: "/user-management", icon: ManageAccountsIcon, adminOnly: true }
+        ]
     }
 ];

@@ -5,7 +5,7 @@ import {
 } from "@mui/material";
 
 import { useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 
 import authService from "../../services/authService";
@@ -20,8 +20,6 @@ import useSnackbar from "../../hooks/useSnackbar";
 function LoginForm() {
 
     const navigate = useNavigate();
-    const location = useLocation();
-    const from = location.state?.from?.pathname || "/dashboard";
 
     const [userId, setUserId] = useState("");
     const [password, setPassword] = useState("");
@@ -77,7 +75,7 @@ function LoginForm() {
             await employeeService.refreshEmployees();
             await koreanService.refreshKoreans();
             
-            navigate(from, { replace: true });
+            navigate("/dashboard", { replace: true });
 
         } catch (err) {
 

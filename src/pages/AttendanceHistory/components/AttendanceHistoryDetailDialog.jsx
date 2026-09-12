@@ -198,40 +198,44 @@ function AttendanceHistoryDetailDialog({ open, onClose, agenda }) {
                                 {displayValue(agenda?.TRAINING_NAME)}
                             </Typography>
 
-                            <Tooltip
-                                title="Export Excel"
-                                arrow
-                            >
+                            <Stack direction="row" spacing={1} alignItems="center">
+                                <Chip label={`#${displayValue(agenda?.SCHEDULE_ID)}`} size="small" variant="outlined" />
 
-                                <span>
+                                <Tooltip
+                                    title="Export Excel"
+                                    arrow
+                                >
 
-                                    <AppButton
+                                    <span>
 
-                                        color="success"
+                                        <AppButton
 
-                                        onClick={handleExportExcel}
+                                            color="success"
 
-                                        disabled={rows.length === 0}
+                                            onClick={handleExportExcel}
 
-                                        sx={{
+                                            disabled={rows.length === 0}
 
-                                            minWidth: 42,
-                                            width: 42,
-                                            height: 42,
-                                            p: 0,
-                                            boxShadow: "none"
+                                            sx={{
 
-                                        }}
+                                                minWidth: 42,
+                                                width: 42,
+                                                height: 42,
+                                                p: 0,
+                                                boxShadow: "none"
 
-                                    >
+                                            }}
 
-                                        <FileDownloadIcon />
+                                        >
 
-                                    </AppButton>
+                                            <FileDownloadIcon />
 
-                                </span>
+                                        </AppButton>
 
-                            </Tooltip>
+                                    </span>
+
+                                </Tooltip>
+                            </Stack>
 
                         </Box>
 
