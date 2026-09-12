@@ -85,6 +85,8 @@ function UserProfile() {
     const [showNew, setShowNew] = useState(false);
     const [showConfirm, setShowConfirm] = useState(false);
     const [saving, setSaving] = useState(false);
+    const newPassError = newPassword.length > 0 && newPassword.length < 6;
+    const confirmError = confirmPassword.length > 0 && newPassword !== confirmPassword;
 
     const handleAvatarClick = (event) => setAnchorEl(event.currentTarget);
     const handleMenuClose = () => setAnchorEl(null);
@@ -112,8 +114,8 @@ function UserProfile() {
             showSnackbar("Password baru harus diisi.", "warning");
             return;
         }
-        if (newPassword.length < 4) {
-            showSnackbar("Password minimal 4 karakter.", "warning");
+        if (newPassword.length < 6) {
+            showSnackbar("Password minimal 6 karakter.", "warning");
             return;
         }
         if (newPassword !== confirmPassword) {
@@ -144,7 +146,7 @@ function UserProfile() {
             <Box
                 sx={{
                     display: "flex",
-                    alignitems: "center",
+                    alignItems: "center",
                     gap: 2
                 }}
             >
@@ -206,7 +208,7 @@ function UserProfile() {
                 </MenuItem>
             </Menu>
 
-            <Dialog open={resetOpen} onClose={handleCloseReset} fullWidth maxWidth="xs">
+            <Dialog open={resetOpen} onClose={handleCloseReset} fullWidth maxWidth="xs" slotProps={{ paper: { sx: { borderRadius: 3, overflow: "hidden" } } }}>
                 <DialogTitle>Reset Password</DialogTitle>
                 <DialogContent sx={{ display: "flex", flexDirection: "column", gap: 2, pt: "16px !important" }}>
                     <TextField
@@ -218,6 +220,8 @@ function UserProfile() {
                         size="small"
                         disabled={saving}
                         autoFocus
+                        error={newPassError}
+                        helperText={newPassError ? "Password minimal 6 karakter." : ""}
                         InputProps={{
                             endAdornment: (
                                 <InputAdornment position="end">
@@ -236,6 +240,8 @@ function UserProfile() {
                         fullWidth
                         size="small"
                         disabled={saving}
+                        error={confirmError}
+                        helperText={confirmError ? "Konfirmasi password tidak cocok." : ""}
                         onKeyDown={(e) => { if (e.key === "Enter") handleResetPassword(); }}
                         InputProps={{
                             endAdornment: (

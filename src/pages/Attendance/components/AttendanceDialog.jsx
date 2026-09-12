@@ -13,7 +13,8 @@ import {
     ToggleButton,
     ToggleButtonGroup,
     Stack,
-    Avatar
+    Avatar,
+    LinearProgress
 } from "@mui/material";
 
 import CloseIcon from "@mui/icons-material/Close";
@@ -301,23 +302,19 @@ function AttendanceDialog({ open, agenda, scanType, queueVersion, onClose, onQue
             onClose={onClose}
             fullWidth
             maxWidth="sm"
-            paperprops={{
-                sx: {
-                    borderRadius: 3,
-                    mx: 2
-                }
-            }}
+            slotProps={{ paper: { sx: { borderRadius: 3, overflow: "hidden" } } }}
         >
 
             <DialogTitle
                 sx={{
                     display: "flex",
                     justifyContent: "space-between",
-                    alignitems: "center"
+                    alignItems: "center"
                 }}
             >
 
                 Scan Attendance
+                <IconButton onClick={onClose} size="small"><CloseIcon /></IconButton>
 
             </DialogTitle>
 
@@ -358,6 +355,10 @@ function AttendanceDialog({ open, agenda, scanType, queueVersion, onClose, onQue
 
                 </Typography>
 
+            </Box>
+            <Box sx={{ px: 3, mt: 1 }}>
+                <LinearProgress variant="determinate" value={progress.scanned ? Math.round((progress.uploaded / progress.scanned) * 100) : 0} sx={{ height: 6, borderRadius: 1 }} />
+                <Typography variant="caption" color="text.secondary" sx={{ display: "block", textAlign: "right", mt: 0.5 }}>{progress.scanned ? Math.round((progress.uploaded / progress.scanned) * 100) : 0}% uploaded</Typography>
             </Box>
 
             <DialogContent dividers>

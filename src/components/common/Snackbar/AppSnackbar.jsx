@@ -11,7 +11,7 @@ function AppSnackbar({
 
         <Snackbar
             open={open}
-            autoHideDuration={3000}
+            autoHideDuration={severity === "error" ? 5000 : 3000}
             onClose={onClose}
             anchorOrigin={{
                 vertical: "top",

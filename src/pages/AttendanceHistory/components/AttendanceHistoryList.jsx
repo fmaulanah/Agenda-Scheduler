@@ -22,7 +22,7 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 
 function AttendanceHistoryList({ rows, loading, onDetail }) 
 {
-    const PAGE_SIZE = 2;
+    const PAGE_SIZE = 5;
 
     const [page, setPage] = useState(1);
 
@@ -41,6 +41,12 @@ function AttendanceHistoryList({ rows, loading, onDetail })
         page * PAGE_SIZE
 
     );
+
+    if (!rows.length && !loading) {
+        return (
+            <Box sx={{ p: 4, textAlign: 'center' }}><Typography color="text.secondary">Belum ada riwayat.</Typography></Box>
+        );
+    }
 
     if (loading) {
 
@@ -68,108 +74,13 @@ function AttendanceHistoryList({ rows, loading, onDetail })
 
     }
 
-    // if (!rows.length) {
 
-    //     return (
-
-    //         <Card>
-
-    //             <CardContent>
-
-    //                 <Typography
-    //                     align="center"
-    //                     color="text.secondary"
-    //                 >
-
-    //                     No Attendance History
-
-    //                 </Typography>
-
-    //             </CardContent>
-
-    //         </Card>
-
-    //     );
-
-    // }
 
     return (
 
-        <Box
-        sx={{
-            display: "flex",
-            flexDirection: "column",
-            width: "100%"
-        }}
-    >
+<Box sx={{ display: "flex", flexDirection: "column", width: "100%", gap: 2 }}>
 
-        {/* Navigation */}
-
-        <Box
-            sx={{
-                display: "flex",
-                justifyContent: "flex-end"
-            }}
-        >
-
-            <Box
-                sx={{
-                    display: "flex",
-                    alignitems: "center"
-                }}
-            >
-
-                <IconButton
-
-                    disabled={page === 1}
-
-                    onClick={() =>
-
-                        setPage(current => current - 1)
-
-                    }
-
-                >
-
-                    <ChevronLeftIcon />
-
-                </IconButton>
-
-                <Typography
-                    variant="body2"
-                    fontWeight={700}
-                    sx={{
-                        mt:1,
-                        minWidth: 60,
-                        textAlign: "center"
-                    }}
-                >
-
-                    {page} / {totalPages || 1}
-
-                </Typography>
-
-                <IconButton
-
-                    disabled={page === totalPages || totalPages === 0}
-
-                    onClick={() =>
-
-                        setPage(current => current + 1)
-
-                    }
-
-                >
-
-                    <ChevronRightIcon />
-
-                </IconButton>
-
-            </Box>
-
-        </Box>
-
-            <Stack spacing={2}>
+            <Stack spacing={1.75} sx={{ flex: 1 }}>
 
             
                 {pagedRows.map(row => (
@@ -194,7 +105,7 @@ function AttendanceHistoryList({ rows, loading, onDetail })
                                         <Stack
                                             direction="row"
                                             spacing={1}
-                                            alignitems="center"
+                                            alignItems="center"
                                             mt={0.5}
                                         >
 
@@ -225,7 +136,7 @@ function AttendanceHistoryList({ rows, loading, onDetail })
                                             <Stack
                                                 direction="row"
                                                 spacing={1}
-                                                alignitems="center"
+                                                alignItems="center"
                                             >
 
                                                 <PersonIcon
@@ -259,7 +170,7 @@ function AttendanceHistoryList({ rows, loading, onDetail })
                                             <Stack
                                                 direction="row"
                                                 spacing={1}
-                                                alignitems="center"
+                                                alignItems="center"
                                             >
 
                                                 <MeetingRoomIcon
@@ -312,7 +223,7 @@ function AttendanceHistoryList({ rows, loading, onDetail })
 
                                                 <Stack
                                                     spacing={1}
-                                                    alignitems="center"
+                                                    alignItems="center"
                                                 >
 
                                                     <LoginIcon color="success" />
@@ -356,7 +267,7 @@ function AttendanceHistoryList({ rows, loading, onDetail })
 
                                                 <Stack
                                                     spacing={1}
-                                                    alignitems="center"
+                                                    alignItems="center"
                                                 >
 
                                                     <LogoutIcon color="error" />
@@ -400,7 +311,7 @@ function AttendanceHistoryList({ rows, loading, onDetail })
 
                                                 <Stack
                                                     spacing={1}
-                                                    alignitems="center"
+                                                    alignItems="center"
                                                 >
 
                                                     <CheckCircleIcon color="primary" />
@@ -464,10 +375,16 @@ function AttendanceHistoryList({ rows, loading, onDetail })
 
                 }
 
+
             </Stack>
-
+            {totalPages > 1 && (
+                <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 0.5, py: 0.75, px: 1, borderRadius: 3, bgcolor: "background.paper", border: 1, borderColor: "divider", boxShadow: 1, alignSelf: "center", mt: 2 }}>
+                    <IconButton size="small" disabled={page === 1} onClick={() => setPage(c => c - 1)} sx={{ width: 32, height: 32, bgcolor: page === 1 ? "transparent" : "primary.main", color: page === 1 ? "text.disabled" : "white", "&:hover": { bgcolor: "primary.dark", color: "white" }, "&.Mui-disabled": { bgcolor: "grey.100" } }}><ChevronLeftIcon fontSize="small" /></IconButton>
+                    <Typography variant="body2" fontWeight={700} sx={{ minWidth: 52, textAlign: "center", px: 1, color: "text.primary" }}>{page} / {totalPages}</Typography>
+                    <IconButton size="small" disabled={page === totalPages} onClick={() => setPage(c => c + 1)} sx={{ width: 32, height: 32, bgcolor: page === totalPages ? "transparent" : "primary.main", color: page === totalPages ? "text.disabled" : "white", "&:hover": { bgcolor: "primary.dark", color: "white" }, "&.Mui-disabled": { bgcolor: "grey.100" } }}><ChevronRightIcon fontSize="small" /></IconButton>
+                </Box>
+            )}
         </Box>
-
     );
 
 }

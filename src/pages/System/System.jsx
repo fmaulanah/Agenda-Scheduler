@@ -11,24 +11,23 @@ import {
 } from "@mui/material";
 
 import PersonIcon from "@mui/icons-material/Person";
-import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import GroupIcon from "@mui/icons-material/Group";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import SupportAgentOutlinedIcon from "@mui/icons-material/SupportAgentOutlined";
-import PhoneOutlinedIcon from "@mui/icons-material/PhoneOutlined";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 
 import SystemDialog from "./components/SystemDialog"
 
 import PageHeader from "../../components/common/PageHeader/PageHeader";
 import AppButton from "../../components/common/Button/AppButton";
 import AppCard from "../../components/common/Card/AppCard";
-import LoadingOverlay from "../../components/common/Loading/LoadingOverlay";
 
 import useSnackbar from "../../hooks/useSnackbar";
 
 import employeeService from "../../services/employeeService";
 import koreanService from "../../services/koreanService";
 
-import { getStorage, setStorage, removeStorage } from "../../utils/storage";
+import { getStorage, setStorage } from "../../utils/storage";
 import STORAGE_KEYS from "../../utils/storageKeys";
 
 function System() {
@@ -212,8 +211,6 @@ function System() {
 
         <>
 
-            <LoadingOverlay open={loading} />
-
             <PageHeader
                 title="System"
                 subtitle="Maintenance dan sinkronisasi data aplikasi."
@@ -300,7 +297,7 @@ function System() {
 
                             <Stack spacing={2}>
 
-                                <PersonIcon
+                                <GroupIcon
                                     color="primary"
                                     sx={{
                                         fontSize: 42
@@ -383,149 +380,36 @@ function System() {
                                         spacing={2}
                                     >
 
-                                        <Grid size={{ xs: 12, md: 6 }}>
-
-                                            <Stack
-                                                direction="row"
-                                                spacing={1.5}
-                                                alignitems="center"
-                                            >
-
-                                                <SupportAgentOutlinedIcon color="primary" />
-
-                                                <Box>
-
-                                                    <Typography fontWeight={600}>
-                                                        IT. Karjono
-                                                    </Typography>
-
-                                                    <Typography
-                                                        variant="body2"
-                                                        color="text.secondary"
+                                                            {[
+                                            { name: "IT. Karjono", ext: "294" },
+                                            { name: "IT. Irfan", ext: "297" },
+                                            { name: "IT. Deny", ext: "294" },
+                                            { name: "IT. Fikri", ext: "297" }
+                                        ].map((it) => (
+                                            <Grid key={it.name} size={{ xs: 12, md: 6 }}>
+                                                <Stack direction="row" spacing={1.5} alignItems="center" justifyContent="space-between">
+                                                    <Stack direction="row" spacing={1.5} alignItems="center">
+                                                        <SupportAgentOutlinedIcon color="primary" />
+                                                        <Box>
+                                                            <Typography fontWeight={600}>{it.name}</Typography>
+                                                            <Typography variant="body2" color="text.secondary">IT - Back Task &amp; Operation Technology</Typography>
+                                                            <Typography variant="body2" color="text.secondary">Ext. {it.ext}</Typography>
+                                                        </Box>
+                                                    </Stack>
+                                                    <Box
+                                                        component="span"
+                                                        role="button"
+                                                        tabIndex={0}
+                                                        aria-label={`Copy ${it.ext}`}
+                                                        onClick={() => { navigator.clipboard.writeText(it.ext); showSnackbar(`Ext ${it.ext} copied`, "success"); }}
+                                                        onKeyDown={(e) => { if (e.key === "Enter") { navigator.clipboard.writeText(it.ext); showSnackbar(`Ext ${it.ext} copied`, "success"); }}}
+                                                        sx={{ display: "inline-flex", p: 0.5, borderRadius: 1, cursor: "pointer", "&:hover": { bgcolor: "grey.100" } }}
                                                     >
-                                                        IT - Back Task & Operation Technology
-                                                    </Typography>
-
-                                                    <Typography
-                                                        variant="body2"
-                                                        color="text.secondary"
-                                                    >
-                                                        Ext. 294
-                                                    </Typography>
-
-                                                </Box>
-
-                                            </Stack>
-
-                                        </Grid>
-
-                                        <Grid size={{ xs: 12, md: 6 }}>
-
-                                            <Stack
-                                                direction="row"
-                                                spacing={1.5}
-                                                alignitems="center"
-                                            >
-
-                                                <SupportAgentOutlinedIcon color="primary" />
-
-                                                <Box>
-
-                                                    <Typography fontWeight={600}>
-                                                        IT. Irfan
-                                                    </Typography>
-
-                                                    <Typography
-                                                        variant="body2"
-                                                        color="text.secondary"
-                                                    >
-                                                        IT - Back Task & Operation Technology
-                                                    </Typography>
-
-                                                    <Typography
-                                                        variant="body2"
-                                                        color="text.secondary"
-                                                    >
-                                                        Ext. 297
-                                                    </Typography>
-
-                                                </Box>
-
-                                            </Stack>
-
-                                        </Grid>
-
-                                        <Grid size={{ xs: 12, md: 6 }}>
-
-                                            <Stack
-                                                direction="row"
-                                                spacing={1.5}
-                                                alignitems="center"
-                                            >
-
-                                                <SupportAgentOutlinedIcon color="primary" />
-
-                                                <Box>
-
-                                                    <Typography fontWeight={600}>
-                                                        IT. Deny
-                                                    </Typography>
-
-                                                    <Typography
-                                                        variant="body2"
-                                                        color="text.secondary"
-                                                    >
-                                                        IT - Back Task & Operation Technology
-                                                    </Typography>
-
-                                                    <Typography
-                                                        variant="body2"
-                                                        color="text.secondary"
-                                                    >
-                                                        Ext. 294
-                                                    </Typography>
-
-                                                </Box>
-
-                                            </Stack>
-
-                                        </Grid>
-
-                                        <Grid size={{ xs: 12, md: 6 }}>
-
-                                            <Stack
-                                                direction="row"
-                                                spacing={1.5}
-                                                alignitems="center"
-                                            >
-
-                                                <SupportAgentOutlinedIcon color="primary" />
-
-                                                <Box>
-
-                                                    <Typography fontWeight={600}>
-                                                        IT. Fikri
-                                                    </Typography>
-
-                                                    <Typography
-                                                        variant="body2"
-                                                        color="text.secondary"
-                                                    >
-                                                        IT - Back Task & Operation Technology
-                                                    </Typography>
-
-                                                    <Typography
-                                                        variant="body2"
-                                                        color="text.secondary"
-                                                    >
-                                                        Ext. 297
-                                                    </Typography>
-
-                                                </Box>
-
-                                            </Stack>
-
-                                        </Grid>
+                                                        <ContentCopyIcon fontSize="small" color="action" />
+                                                    </Box>
+                                                </Stack>
+                                            </Grid>
+                                        ))}
 
                                     </Grid>
 

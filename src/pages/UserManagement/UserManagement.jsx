@@ -138,7 +138,6 @@ function UserManagement() {
 
     return (
         <>
-            <LoadingOverlay open={loading} />
 
             <PageHeader
                 title="User Management"

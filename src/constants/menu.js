@@ -22,13 +22,13 @@ export const MENUS = [
         id: 3,
         title: "Attendance",
         icon: AssignmentOutlinedIcon,
-        path: "/attendant"
+        path: "/attendance"
     },
     {
         id: 4,
         title: "Attendance History",
         icon: HistoryEduIcon,
-        path: "/attendancehistory"
+        path: "/attendance-history"
     },
     {
         id: 5,

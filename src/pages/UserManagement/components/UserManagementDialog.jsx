@@ -177,12 +177,13 @@ function UserManagementDialog({ open, editingUser, existingUsers = [], onClose, 
             maxWidth="sm"
             component="form"
             onSubmit={handleSubmit}
+            slotProps={{ paper: { sx: { borderRadius: 3, overflow: "hidden" } } }}
         >
             <DialogTitle
                 sx={{
                     display: "flex",
                     justifyContent: "space-between",
-                    alignitems: "center",
+                    alignItems: "center",
                     fontWeight: 600,
                     variant: "h6"
                 }}

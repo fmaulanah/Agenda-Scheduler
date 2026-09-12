@@ -5,9 +5,6 @@ import {
     Chip,
     IconButton,
     Typography,
-    TextField,
-    InputAdornment,
-    Stack,
     Pagination
 } from "@mui/material";
 
@@ -17,28 +14,21 @@ import EditIcon from "@mui/icons-material/Edit";
 import BlockIcon from "@mui/icons-material/Block";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import RefreshIcon from "@mui/icons-material/Refresh";
-import SearchIcon from "@mui/icons-material/Search";
 
 import EmptyState from "../../../components/common/Empty/EmptyState";
-import LoadingOverlay from "../../../components/common/Loading/LoadingOverlay";
+import SkeletonTable from "../../../components/common/Loading/SkeletonTable";
 
 import useResponsive from "../../../hooks/useResponsive";
 
 function UserManagementTable({ rows, loading, onEdit, onToggleBlock, onResetPassword }) {
     const { isMobile } = useResponsive();
-    const [searchTerm, setSearchTerm] = useState("");
     const [page, setPage] = useState(1);
-    const pageSize = 4;
-
-    const filteredRows = rows.filter(row =>
-        row.USER_ID?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        row.EMP_NAME?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        row.EMPID?.includes(searchTerm)
-    );
+    const pageSize = 5;
+    const filteredRows = rows;
     const mobileRows = filteredRows.slice((page - 1) * pageSize, page * pageSize);
 
     if (loading) {
-        return <LoadingOverlay open={loading} />;
+        return <SkeletonTable rows={6} />;
     }
 
     const columns = [
@@ -318,6 +308,7 @@ function UserManagementTable({ rows, loading, onEdit, onToggleBlock, onResetPass
                     rows={filteredRows}
                     columns={columns}
                     getRowId={(row) => row.USER_ID}
+                    density="comfortable"
                     pageSizeOptions={[5, 10, 25]}
                     disableRowSelectionOnClick
                     initialState={{

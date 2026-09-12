@@ -26,33 +26,28 @@ function ScheduleDayDialog({ open, date, agendas, roomMap = {}, onClose, onSelec
                 paper: { sx: { borderRadius: 3, overflow: "hidden" } }
             }}
         >
+
             <DialogTitle
                 sx={{
                     display: "flex",
                     justifyContent: "space-between",
                     alignItems: "center",
-                    py: 2,
-                    pr: 1.5,
-                    bgcolor: "primary.main",
-                    color: "white"
+                    fontWeight: 600,
+                    variant: "h6"
                 }}
             >
-                <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
-                    <Box sx={{ width: 40, height: 40, borderRadius: 2, bgcolor: "rgba(255,255,255,0.2)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                        <CalendarMonthIcon fontSize="small" />
-                    </Box>
-                    <Box>
-                        <Typography variant="subtitle1" fontWeight={700} color="white" sx={{ lineHeight: 1.2 }}>
-                            {dayjs(date).format("dddd, DD MMMM YYYY")}
-                        </Typography>
-                        <Typography variant="caption" sx={{ opacity: 0.85, color: "white" }}>
-                            {agendas.length} agenda • Klik untuk melihat detail
-                        </Typography>
-                    </Box>
-                </Box>
-                <IconButton onClick={onClose} size="small" sx={{ color: "white", bgcolor: "rgba(255,255,255,0.15)", "&:hover": { bgcolor: "rgba(255,255,255,0.25)" }, ml: 1, flexShrink: 0 }}>
-                    <CloseIcon fontSize="small" />
+
+                Detail Agenda
+
+                <IconButton
+                    onClick={onClose}
+                    size="small"
+                >
+
+                    <CloseIcon />
+
                 </IconButton>
+
             </DialogTitle>
 
             <DialogContent sx={{ p: 2, bgcolor: "grey.50" }}>

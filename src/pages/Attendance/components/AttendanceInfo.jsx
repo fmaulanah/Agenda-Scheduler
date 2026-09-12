@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 
-import { Chip, Grid, Stack, Typography } from "@mui/material";
+import { Box, Chip, Grid, LinearProgress, Stack, Tooltip, Typography } from "@mui/material";
 
 import SchoolIcon from "@mui/icons-material/School";
 import PersonIcon from "@mui/icons-material/Person";
@@ -126,7 +126,7 @@ function AttendanceInfo({
                 <Stack
                     direction="row"
                     spacing={1}
-                    flexwrap="wrap"
+                    flexWrap="wrap"
                 >
 
                     {isSingleScan ? (
@@ -178,6 +178,7 @@ function AttendanceInfo({
                         size="small"
                         color="secondary"
                         onClick={onUpload}
+                        title={!agenda ? "Pilih agenda dulu" : undefined}
                         sx={{
                             minWidth: 40,
                             width: 40,
@@ -301,7 +302,7 @@ function BoxItem({ icon, title, value }) {
         <Stack
             direction="row"
             spacing={1.25}
-            alignitems="center"
+            alignItems="center"
             sx={{
                 p: 1.5,
                 border: 1,
@@ -323,8 +324,9 @@ function BoxItem({ icon, title, value }) {
 
                 <Typography
                     variant="caption"
-                    fontWeight={800}
+                    fontWeight={500}
                     color="text.secondary"
+                    sx={{ letterSpacing: 0.3, textTransform: "uppercase" }}
                 >
 
                     {title}
@@ -333,9 +335,11 @@ function BoxItem({ icon, title, value }) {
 
                 <Typography
                     variant="body2"
-                    fontWeight={700}
-                    flexwrap="wrap"
+                    fontWeight={600}
+                    flexWrap="wrap"
                     title={value}
+                    noWrap={false}
+                    sx={{ wordBreak: "break-word" }}
                 >
 
                     {value}

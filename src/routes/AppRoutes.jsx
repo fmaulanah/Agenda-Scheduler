@@ -9,6 +9,7 @@ import Attendt from "../pages/Attendance/Attendance";
 import AttendanceHist from "../pages/AttendanceHistory/AttendanceHistory"
 import System from "../pages/System/System";
 import UserManagement from "../pages/UserManagement/UserManagement";
+import NotFound from "../pages/NotFound/NotFound";
 import ProtectedRoute from "./ProtectedRoute";
 import PublicRoute from "./PublicRoute";
 import { AdminRoute } from "./ProtectedRoute";
@@ -56,13 +57,23 @@ function AppRoutes() {
                 />
 
                 <Route
-                    path="/attendant"
+                    path="/attendance"
                     element={<Attendt />}
                 />
 
                 <Route
-                    path="/attendancehistory"
+                    path="/attendance-history"
                     element={<AttendanceHist />}
+                />
+
+                <Route
+                    path="/attendant"
+                    element={<Navigate to="/attendance" replace />}
+                />
+
+                <Route
+                    path="/attendancehistory"
+                    element={<Navigate to="/attendance-history" replace />}
                 />
 
                 <Route
@@ -83,7 +94,7 @@ function AppRoutes() {
 
             <Route
                 path="*"
-                element={<Navigate to="/" replace />}
+                element={<NotFound />}
             />
 
         </Routes>

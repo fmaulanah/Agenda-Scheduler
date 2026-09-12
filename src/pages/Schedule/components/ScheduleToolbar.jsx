@@ -33,8 +33,8 @@ function ScheduleToolbar({ month, MONTHS, YEARS, setMonth, onAddAgenda, onRefres
                     <Box
                         sx={{
                             display: "flex",
-                            justifyContent: "left",
-                            alignitems: "left",
+                            justifyContent: "flex-start",
+                            alignItems: "center",
                             gap: 1,
                             p:0
                         }}
@@ -93,7 +93,17 @@ function ScheduleToolbar({ month, MONTHS, YEARS, setMonth, onAddAgenda, onRefres
                         </TextField>
 
                         <AppButton
+                            variant="outlined"
+                            onClick={onRefresh}
+                            aria-label="Refresh"
+                            sx={{ minWidth: 40, width: 40, height: 40, p: 0, boxShadow: "none" }}
+                        >
+                            <RefreshIcon />
+                        </AppButton>
+
+                        <AppButton
                             onClick={onAddAgenda}
+                            aria-label="Tambah Agenda"
                             sx={{
                                 minWidth: 40,
                                 width: 40,
@@ -115,7 +125,7 @@ function ScheduleToolbar({ month, MONTHS, YEARS, setMonth, onAddAgenda, onRefres
                     sx={{
                         display: "flex",
                         justifyContent: "flex-end",
-                        alignitems: "center",
+                        alignItems: "center",
                         flexWrap: "wrap",
                         gap: 2
                     }}

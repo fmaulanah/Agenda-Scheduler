@@ -38,13 +38,14 @@ function ScheduleAgendaDialog({ open, editingId, form, rooms, trainerError, savi
             maxWidth="sm"
             component="form"
             onSubmit={onSubmit}
+            slotProps={{ paper: { sx: { borderRadius: 3, overflow: "hidden" } } }}
         >
 
             <DialogTitle
                 sx={{
                     display: "flex",
                     justifyContent: "space-between",
-                    alignitems: "center",
+                    alignItems: "center",
                     fontWeight: 600,
                     variant: "h6"
                 }}
@@ -100,8 +101,8 @@ function ScheduleAgendaDialog({ open, editingId, form, rooms, trainerError, savi
                             shrink: true
                         }
                     }}
-                    inputprops={{
-                        min: form.startDate
+                    inputProps={{
+                        max: form.endDate
                     }}
                 />
 
@@ -118,8 +119,8 @@ function ScheduleAgendaDialog({ open, editingId, form, rooms, trainerError, savi
                             shrink: true
                         }
                     }}
-                    inputprops={{
-                        max: form.endDate
+                    inputProps={{
+                        min: form.startDate
                     }}
                 />
 
@@ -241,6 +242,7 @@ function ScheduleAgendaDialog({ open, editingId, form, rooms, trainerError, savi
                         />
 
                     }
+                    title={!editingId ? "Aktif/non-aktif hanya saat edit" : undefined}
 
                     label={
                         <Typography

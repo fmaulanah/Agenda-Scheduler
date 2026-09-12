@@ -25,7 +25,7 @@ function LoadingOverlay({
 
             <Stack
                 spacing={2}
-                alignitems="center"
+                alignItems="center"
             >
 
                 <CircularProgress />

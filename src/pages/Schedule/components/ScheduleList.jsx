@@ -12,7 +12,7 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 
 import AppCard from "../../../components/common/Card/AppCard";
 
-const PAGE_SIZE = 2;
+const PAGE_SIZE = 5;
 
 function AgendaCard({ agenda, roomMap, onSelectAgenda }) {
     const isActive = agenda.useYn === "Y";
@@ -74,14 +74,6 @@ function AgendaCard({ agenda, roomMap, onSelectAgenda }) {
                     </Box>
 
                     <Stack direction="row" spacing={0.75} sx={{ mt: 1.5, flexWrap: "wrap" }}>
-                        <Chip
-                            icon={<MeetingRoomIcon sx={{ fontSize: 14 }} />}
-                            label={roomMap[agenda.room] ?? agenda.room}
-                            size="small"
-                            color="primary"
-                            variant="outlined"
-                            sx={{ height: 22, fontSize: "0.7rem", "& .MuiChip-icon": { ml: "6px" } }}
-                        />
                         <Chip
                             label={isActive ? "Aktif" : "Non Aktif"}
                             size="small"

@@ -52,6 +52,7 @@ function SystemDialog({
     const [loadingTable, setLoadingTable] = useState(false);
     const [rowChangeConfirmOpen, setRowChangeConfirmOpen] = useState(false);
     const [pendingRow, setPendingRow] = useState(null);
+    const nikError = form.empId.length > 0 && form.empId.trim().length !== 9 ? "NIK harus 9 digit." : "";
 
     const loadCoach = async () => {
 
@@ -181,7 +182,7 @@ function SystemDialog({
             setEditingCoach(null);
 
             onSaved?.();
-            
+
 
         }
         catch (err) {
@@ -321,7 +322,7 @@ function SystemDialog({
                     onClick={() => handleDelete(row)}
                 >
 
-                    <DeleteOutlineIcon/>
+                    <DeleteOutlineIcon />
 
                 </IconButton>
 
@@ -354,26 +355,22 @@ function SystemDialog({
                 maxWidth="md"
                 component="form"
                 onSubmit={handleSubmit}
-                paperprops={{
-                    sx: {
-                        minHeight: "82vh"
-                    }
-                }}
+                slotProps={{ paper: { sx: { borderRadius: 3, overflow: "hidden" } } }}
             >
 
                 <DialogTitle
                     sx={{
                         display: "flex",
                         justifyContent: "space-between",
-                        alignitems: "center",
+                        alignItems: "center",
                         fontWeight: 600
                     }}
                 >
 
-                    {isEdit ? "Update Data Korean Coach " 
-                            : "Input Data Korean Coach"
+                    {isEdit ? "Update Data Korean Coach "
+                        : "Input Data Korean Coach"
                     }
-                    
+
                     <IconButton
                         onClick={handleClose}
                         size="small"
@@ -410,6 +407,8 @@ function SystemDialog({
                                     onKeyDown={!isEdit ? onEmployeeKeyDown : undefined}
                                     required
                                     disabled={saving || isEdit}
+                                    error={Boolean(nikError)}
+                                    helperText={nikError}
                                 />
 
                             </Grid>
@@ -514,6 +513,7 @@ function SystemDialog({
                                 columns={columns}
                                 loading={loadingTable}
                                 getRowId={(row) => row.EMPID}
+                                density="comfortable"
                                 disableRowSelectionOnClick
                                 pageSizeOptions={[5, 10]}
                                 onRowClick={handleRowClick}

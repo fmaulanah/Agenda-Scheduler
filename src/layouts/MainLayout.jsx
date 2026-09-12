@@ -1,5 +1,5 @@
-import { Outlet } from "react-router-dom";
-import { useState, useMemo } from "react";
+import { Outlet, useLocation } from "react-router-dom";
+import { useState, useMemo, useEffect } from "react";
 import { useTheme } from "@mui/material/styles";
 
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -10,10 +10,10 @@ import Header from "../components/Header/Header";
 import useMasterDataPolling from "../hooks/useMasterDataPolling";
 
 import {
-    AppBar,
-    Toolbar,
     Drawer,
     Box,
+    Breadcrumbs,
+    Link,
     Typography,
     CssBaseline
 } from "@mui/material";
@@ -27,7 +27,7 @@ function MainLayout() {
 
     const theme = useTheme();
 
-    const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+    const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
     const [drawerOpen, setDrawerOpen] = useState(false);
     const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
     const [hoverExpanded, setHoverExpanded] = useState(false);
@@ -45,6 +45,20 @@ function MainLayout() {
     }, [isMobile, effectiveDrawerWidth]);
 
     const sidebarIsCollapsed = !isMobile && sidebarCollapsed && !isHoverPreview;
+    const location = useLocation();
+    useEffect(() => { window.scrollTo(0, 0); }, [location.pathname]);
+    const breadcrumbMap = {
+        "/dashboard": "Dashboard",
+        "/schedule": "Schedule",
+        "/attendance": "Attendance",
+        "/attendance-history": "Attendance History",
+        "/system": "System",
+        "/user-management": "User Management",
+    };
+    const currentTitle = breadcrumbMap[location.pathname] || "";
+    useEffect(() => {
+        document.title = currentTitle ? `${currentTitle} — CSG Agenda Scheduler` : "CSG Agenda Scheduler";
+    }, [currentTitle]);
 
     return (
 
@@ -110,7 +124,8 @@ function MainLayout() {
                 sx={{
                     flexGrow: 1,
                     width: {
-                        md: `calc(100% - ${effectiveDrawerWidth}px)`
+                        xs: "100%",
+                        sm: `calc(100% - ${effectiveDrawerWidth}px)`
                     },
                     bgcolor: "#F5F7FA",
                     minHeight: "100vh"
@@ -131,6 +146,12 @@ function MainLayout() {
                         p:3
                     }}
                 >
+                    {currentTitle && (
+                        <Breadcrumbs sx={{ mb: 2 }} separator="›">
+                            <Link underline="hover" color="inherit" href="#/dashboard">Home</Link>
+                            <Typography color="text.primary" fontWeight={600}>{currentTitle}</Typography>
+                        </Breadcrumbs>
+                    )}
 
                     <Outlet />
 

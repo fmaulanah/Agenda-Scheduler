@@ -1,14 +1,23 @@
 import { Typography, Box } from "@mui/material";
 
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import TodayIcon from "@mui/icons-material/Today";
+import EventAvailableIcon from "@mui/icons-material/EventAvailable";
 import AppCard from "../../../components/common/Card/AppCard";
 
 import useResponsive from "../../../hooks/useResponsive";
+
+const ICON_MAP = {
+    month: CalendarMonthIcon,
+    today: TodayIcon,
+    upcoming: EventAvailableIcon,
+};
 
 function DashboardStat({
     title,
     value,
     icon,
+    iconKey,
     color = "primary.main"
 }) {
 
@@ -35,7 +44,7 @@ function DashboardStat({
                 sx={{
                     display: "flex",
                     justifyContent: "space-between",
-                    alignitems: "center",
+                    alignItems: "center",
                     mb: {
                         xs: 1,
                         md: 2
@@ -44,10 +53,10 @@ function DashboardStat({
             >
 
                 <Typography
-                    variant={isMobile ? "caption" : "body2"}
-                    sx={{
-                        fontSize: isMobile? 20 : 25
-                    }}
+                    variant="body2"
+                    color="text.secondary"
+                    fontWeight={500}
+                    sx={{ fontSize: { xs: 13, md: 14 } }}
                 >
                     {title}
                 </Typography>
@@ -57,16 +66,10 @@ function DashboardStat({
                         color: color
                     }}
                 >
-                    {
-                        <CalendarMonthIcon
-                            sx={{
-                                fontSize: {
-                                    xs: 28,
-                                    md: 36
-                                }
-                            }}
-                        />
-                    }
+                    {(() => {
+                        const IconComp = icon ? null : (ICON_MAP[iconKey] || CalendarMonthIcon);
+                        return icon ? icon : <IconComp sx={{ fontSize: { xs: 28, md: 36 } }} />;
+                    })()}
                 </Box>
 
             </Box>

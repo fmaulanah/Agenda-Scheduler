@@ -32,7 +32,7 @@ function Sidebar({ isMobile, onClose, isCollapsed = false, onToggleCollapse }) {
 
         if (
 
-            location.pathname === "/attendant" &&
+            location.pathname.startsWith("/attendance") &&
             attendanceQueue.getCount() > 0
 
         ) {
@@ -113,7 +113,7 @@ function Sidebar({ isMobile, onClose, isCollapsed = false, onToggleCollapse }) {
 
                         icon={menu.icon}
 
-                        selected={location.pathname===menu.path}
+                        selected={location.pathname===menu.path || location.pathname.startsWith(menu.path + "/")}
 
                         onClick={() => handleMenuClick(menu.path)}
                         isCollapsed={!isMobile && isCollapsed}

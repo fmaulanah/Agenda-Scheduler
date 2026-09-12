@@ -11,33 +11,28 @@ function ScheduleCalendar({ month, calendarDays, agendas, holidaySet, onSelectAg
     useEffect(() => {
         const handler = (e) => {
             const key = e.key;
-            if (key === "ArrowRight" || key === "ArrowLeft") {
+            const steps = { ArrowRight: 1, ArrowLeft: -1, ArrowDown: 7, ArrowUp: -7 };
+            if (steps[key] !== undefined) {
+                const active = document.activeElement?.getAttribute("role") === "gridcell";
+                if (!active && focusedDayIndex === null) return;
                 e.preventDefault();
-                const step = key === "ArrowRight" ? 1 : -1;
-                const newIdx = (focusedDayIndex ?? 0) + step;
-                if (newIdx >= 0 && newIdx < calendarDays.length) {
-                    setFocusedDayIndex(newIdx);
-                } else {
-                    setFocusedDayIndex(null);
-                }
+                const base = focusedDayIndex ?? calendarDays.findIndex(d => d !== null);
+                const newIdx = base + steps[key];
+                if (newIdx >= 0 && newIdx < calendarDays.length) setFocusedDayIndex(newIdx);
             }
             if (key === "Enter" && focusedDayIndex !== null) {
-                const date = calendarDays[focusedDayIndex];
-                if (date) {
-                    const dayAgendas = agendas.filter(item => item.startDate === date);
-                    if (dayAgendas.length > 0) {
-                        // open day dialog with first agenda or just select first
-                        onSelectAgenda(dayAgendas[0]);
-                    }
+                const dayNum = calendarDays[focusedDayIndex];
+                if (dayNum) {
+                    const date = month.date(dayNum).format("YYYY-MM-DD");
+                    const dayAgendas = agendas.filter(item => date >= item.startDate && date <= item.endDate);
+                    if (dayAgendas.length > 0) onSelectAgenda(dayAgendas[0]);
                 }
             }
-            if (key === "Escape") {
-                setFocusedDayIndex(null);
-            }
+            if (key === "Escape") setFocusedDayIndex(null);
         };
         document.addEventListener("keydown", handler);
         return () => document.removeEventListener("keydown", handler);
-    }, [focusedDayIndex, calendarDays, agendas, onSelectAgenda]);
+    }, [focusedDayIndex, calendarDays, agendas, onSelectAgenda, month]);
 
     return (
 
@@ -79,7 +74,7 @@ function ScheduleCalendar({ month, calendarDays, agendas, holidaySet, onSelectAg
 
                 const date = day ? month.date(day).format("YYYY-MM-DD") : null;
 
-                const dayAgendas = agendas.filter(item => item.startDate === date);
+                const dayAgendas = agendas.filter(item => date >= item.startDate && date <= item.endDate);
 
                 const visibleAgendas = dayAgendas.slice(0, 2);
                 const hiddenCount = dayAgendas.length - visibleAgendas.length;
@@ -92,6 +87,7 @@ function ScheduleCalendar({ month, calendarDays, agendas, holidaySet, onSelectAg
                         key={`${day ?? "empty"}-${index}`}
                         tabIndex={day ? 0 : -1}
                         role="gridcell"
+                        aria-current={isToday ? "date" : undefined}
                         aria-label={date ? dayjs(date).format("DD MMMM YYYY") : ""}
                         sx={{
                             minHeight: { xs: 80 },
@@ -99,7 +95,9 @@ function ScheduleCalendar({ month, calendarDays, agendas, holidaySet, onSelectAg
                             borderRight: (index + 1) % 7 === 0 ? 0 : 1,
                             borderBottom: 1,
                             borderColor: "divider",
-                            bgcolor: !day ? "grey.50" : isHoliday ? "#FFF5F5" : "background.paper",
+                            bgcolor: !day ? "grey.50" : isToday ? "background.paper" : isHoliday ? "#FFF5F5" : "background.paper",
+                            boxShadow: isToday ? "inset 0 0 0 2px" : "none",
+                            boxShadowColor: "primary.main",
                             outline: focusedDayIndex === index ? "2px solid" : "none",
                             outlineColor: "primary.main",
                             "&:focus": {
@@ -117,7 +115,7 @@ function ScheduleCalendar({ month, calendarDays, agendas, holidaySet, onSelectAg
                                         height: 30,
                                         mb: .5,
                                         display: "flex",
-                                        alignitems: "center",
+                                        alignItems: "center",
                                         justifyContent: "center",
                                         borderRadius: "50%",
                                         bgcolor: isToday ? "primary.main" : "transparent",
@@ -167,7 +165,7 @@ function ScheduleCalendar({ month, calendarDays, agendas, holidaySet, onSelectAg
                                             cursor: "pointer",
                                             "&:hover": {
                                                 bgcolor: "primary.main",
-                                                color: "black",
+                                                color: "white",
                                                 borderColor: "primary.main"
                                             }
                                         }}

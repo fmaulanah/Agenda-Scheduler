@@ -41,11 +41,13 @@ function SidebarItem({ title, icon: Icon, selected, onClick, isCollapsed = false
 
         return (
 
-            <Tooltip title={title} placement="right">
+            <Tooltip title={title} placement="right" arrow enterDelay={300}>
 
                 <ListItemButton
 
                     selected={selected}
+
+                    aria-current={selected ? "page" : undefined}
 
                     onClick={onClick}
 
@@ -71,7 +73,7 @@ function SidebarItem({ title, icon: Icon, selected, onClick, isCollapsed = false
 
                         },
 
-                        "&:hover":{
+                        "&:hover:not(.Mui-selected)":{
 
                             bgcolor:"primary.light",
 
@@ -105,6 +107,8 @@ function SidebarItem({ title, icon: Icon, selected, onClick, isCollapsed = false
 
             selected={selected}
 
+            aria-current={selected ? "page" : undefined}
+
             onClick={onClick}
 
             sx={{
@@ -129,7 +133,7 @@ function SidebarItem({ title, icon: Icon, selected, onClick, isCollapsed = false
 
                 },
 
-                "&:hover":{
+                "&:hover:not(.Mui-selected)":{
 
                     bgcolor:"primary.light",
 

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
-import { Box, Chip, Dialog, DialogActions, DialogContent, DialogTitle, Divider, Stack, Typography, Tooltip } from "@mui/material";
+import { Box, Chip, Dialog, DialogActions, DialogContent, DialogTitle, Divider, Stack, Typography, Tooltip, IconButton } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 import { DataGrid } from "@mui/x-data-grid";
 
 import { displayValue, formatStatus, formatAgendaDate, formatYesNo } from "../../../utils/formatter/attendanceHistoryFormatter";
@@ -15,10 +16,9 @@ import attendanceHistoryService from "../../../services/attendanceHistoryService
 
 import AppButton from "../../../components/common/Button/AppButton";
 
-function AttendanceHistoryDetailDialog({ open, onClose, agenda }) 
-{
+function AttendanceHistoryDetailDialog({ open, onClose, agenda }) {
 
-    const [rows, setRows] = useState([]); 
+    const [rows, setRows] = useState([]);
     const [loading, setLoading] = useState(false);
 
     const status = formatStatus(
@@ -122,7 +122,7 @@ function AttendanceHistoryDetailDialog({ open, onClose, agenda })
             headerAlign: "center",
             valueGetter: (_, row) => formatYesNo(row.SCAN_OUT)
         },
-        
+
         {
             field: "SCAN_OUT_TIME",
             headerName: "Scan Out Time",
@@ -167,14 +167,14 @@ function AttendanceHistoryDetailDialog({ open, onClose, agenda })
 
             fullWidth
 
-            maxWidth="lg"
+            maxWidth="md"
+            slotProps={{ paper: { sx: { borderRadius: 3, overflow: "hidden" } } }}
 
         >
 
-            <DialogTitle>
-
+            <DialogTitle sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontWeight: 600 }}>
                 Attendance Detail
-
+                <IconButton onClick={onClose} size="small"><CloseIcon /></IconButton>
             </DialogTitle>
 
             <DialogContent>
@@ -238,7 +238,7 @@ function AttendanceHistoryDetailDialog({ open, onClose, agenda })
                         <Stack
                             direction="row"
                             spacing={1}
-                            alignitems="center"
+                            alignItems="center"
                         >
 
                             <CalendarTodayOutlinedIcon
@@ -267,7 +267,7 @@ function AttendanceHistoryDetailDialog({ open, onClose, agenda })
                             <Stack
                                 direction="row"
                                 spacing={1}
-                                alignitems="center"
+                                alignItems="center"
                             >
 
                                 <PersonOutlineOutlinedIcon
@@ -301,7 +301,7 @@ function AttendanceHistoryDetailDialog({ open, onClose, agenda })
                             <Stack
                                 direction="row"
                                 spacing={1}
-                                alignitems="center"
+                                alignItems="center"
                             >
 
                                 <MeetingRoomOutlinedIcon
@@ -363,9 +363,7 @@ function AttendanceHistoryDetailDialog({ open, onClose, agenda })
 
                     </Stack>
 
-                    <Divider sx={{ my: 3 }} />
-
-                    <Divider />
+                    <Divider sx={{ my: 1 }} />
 
                     <DataGrid
 
@@ -373,6 +371,11 @@ function AttendanceHistoryDetailDialog({ open, onClose, agenda })
                         columns={columns}
                         loading={loading}
                         getRowId={(row) => row.EMPID}
+                        density="comfortable"
+                        disableRowSelectionOnClick
+                        pageSizeOptions={[5, 10, 25]}
+                        initialState={{ pagination: { paginationModel: { pageSize: 5 } } }}
+                        slots={{ noRowsOverlay: () => <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100%" }}><Typography color="text.secondary">Tidak ada peserta.</Typography></Box> }}
                         autoHeight
 
                     />

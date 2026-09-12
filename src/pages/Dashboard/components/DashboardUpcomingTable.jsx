@@ -4,14 +4,17 @@ import { Avatar, Box, Card, CardContent, Chip, Divider,
          List, ListItem, ListItemAvatar, Typography 
 } from "@mui/material";
 
+import { useNavigate } from "react-router-dom";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import MeetingRoomIcon from "@mui/icons-material/MeetingRoom";
 import PersonIcon from "@mui/icons-material/Person";
 import EventBusyIcon from "@mui/icons-material/EventBusy";
 
 import EmptyState from "../../../components/common/Empty/EmptyState";
+import AppButton from "../../../components/common/Button/AppButton";
 
 function DashboardUpcomingTable({ rows }) {
+    const navigate = useNavigate();
 
     return (
 
@@ -45,7 +48,7 @@ function DashboardUpcomingTable({ rows }) {
                             <Box
                                 sx={{
                                     py: 4,
-                                    textalign: "center"
+                                    textAlign: "center"
                                 }}
                             >
 
@@ -206,6 +209,12 @@ function DashboardUpcomingTable({ rows }) {
                                     }
 
                                 </List>
+
+                                {rows.length > 5 && (
+                                    <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
+                                        <AppButton variant="outlined" size="small" onClick={() => navigate("/schedule")}>Lihat semua</AppButton>
+                                    </Box>
+                                )}
 
                             </Box>
 

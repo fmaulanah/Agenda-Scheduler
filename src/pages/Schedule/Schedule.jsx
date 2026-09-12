@@ -563,6 +563,13 @@ function Schedule() {
 
                     <Box
                         sx={{
+                            position: "sticky",
+                            top: 72,
+                            zIndex: 1,
+                            bgcolor: "#F5F7FA",
+                            py: 1,
+                            mx: -3,
+                            px: 3,
                             mb: 1.5
                         }}
                     >
@@ -597,18 +604,26 @@ function Schedule() {
             ) : (
 
                 <DndContext sensors={dndSensors} onDragEnd={handleDragEnd}>
+                    <Box
+                        sx={{
+                            position: "sticky",
+                            top: 72,
+                            zIndex: 1,
+                            bgcolor: "#F5F7FA",
+                            py: 1,
+                            mb: 1.5
+                        }}
+                    >
+                        <ScheduleToolbar
+                            month={month}
+                            MONTHS={MONTHS}
+                            YEARS={YEARS}
+                            setMonth={setMonth}
+                            onAddAgenda={openCreateDialog}
+                            onRefresh={loadAgenda}
+                        />
+                    </Box>
                     <AppCard
-                        title=' '
-                        action={
-                            <ScheduleToolbar
-                                month={month}
-                                MONTHS={MONTHS}
-                                YEARS={YEARS}
-                                setMonth={setMonth}
-                                onAddAgenda={openCreateDialog}
-                                onRefresh={loadAgenda}
-                            />
-                        }
                         sx={{
                             "& .MuiCardContent-root": {
                                 p: 0
