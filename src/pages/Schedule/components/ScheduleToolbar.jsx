@@ -29,14 +29,15 @@ function ScheduleToolbar({ month, MONTHS, YEARS, setMonth, onAddAgenda, onRefres
 
             {isMobile ? (
 
-                <AppCard>
+                <AppCard sx={{ overflow: "visible", "& .MuiCardContent-root": { p: 2 } }}>
                     <Box
                         sx={{
                             display: "flex",
                             justifyContent: "flex-start",
                             alignItems: "center",
                             gap: 1,
-                            p:0
+                            p: 0,
+                            flexWrap: "wrap"
                         }}
                     >
                         <TextField
@@ -51,9 +52,7 @@ function ScheduleToolbar({ month, MONTHS, YEARS, setMonth, onAddAgenda, onRefres
                                         .startOf("month")
                                 )
                             }
-                            sx={{ minWidth: 130, 
-                                  maxWidth: 130
-                            }}
+                            sx={{ flex: 1, minWidth: 110 }}
                         >
                             {MONTHS.map((monthName, index) => (
                                 <MenuItem
@@ -77,10 +76,7 @@ function ScheduleToolbar({ month, MONTHS, YEARS, setMonth, onAddAgenda, onRefres
                                         .startOf("month")
                                 )
                             }
-                            sx={{ 
-                                minWidth: 100, 
-                                maxWidth: 100
-                            }}
+                            sx={{ flex: 1, minWidth: 80 }}
                         >
                             {YEARS.map((year) => (
                                 <MenuItem
@@ -96,7 +92,7 @@ function ScheduleToolbar({ month, MONTHS, YEARS, setMonth, onAddAgenda, onRefres
                             variant="outlined"
                             onClick={onRefresh}
                             aria-label="Refresh"
-                            sx={{ minWidth: 40, width: 40, height: 40, p: 0, boxShadow: "none" }}
+                            sx={{ minWidth: 40, width: 40, height: 40, p: 0, boxShadow: "none", flexShrink: 0 }}
                         >
                             <RefreshIcon />
                         </AppButton>
@@ -109,7 +105,8 @@ function ScheduleToolbar({ month, MONTHS, YEARS, setMonth, onAddAgenda, onRefres
                                 width: 40,
                                 height: 40,
                                 p: 0,
-                                boxShadow: "none"
+                                boxShadow: "none",
+                                flexShrink: 0
                             }}
                         >
                             <AddIcon />

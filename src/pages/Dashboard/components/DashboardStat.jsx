@@ -2,7 +2,6 @@ import { Typography, Box } from "@mui/material";
 
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import TodayIcon from "@mui/icons-material/Today";
-import EventAvailableIcon from "@mui/icons-material/EventAvailable";
 import AppCard from "../../../components/common/Card/AppCard";
 
 import useResponsive from "../../../hooks/useResponsive";
@@ -10,7 +9,6 @@ import useResponsive from "../../../hooks/useResponsive";
 const ICON_MAP = {
     month: CalendarMonthIcon,
     today: TodayIcon,
-    upcoming: EventAvailableIcon,
 };
 
 function DashboardStat({
@@ -53,10 +51,9 @@ function DashboardStat({
             >
 
                 <Typography
-                    variant="body2"
-                    color="text.secondary"
-                    fontWeight={500}
-                    sx={{ fontSize: { xs: 13, md: 14 } }}
+                    variant={isMobile ? "h6" : "h5"}
+                    color="text.primary"
+                    fontWeight={700}
                 >
                     {title}
                 </Typography>

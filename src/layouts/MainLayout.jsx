@@ -12,9 +12,6 @@ import useMasterDataPolling from "../hooks/useMasterDataPolling";
 import {
     Drawer,
     Box,
-    Breadcrumbs,
-    Link,
-    Typography,
     CssBaseline
 } from "@mui/material";
 
@@ -146,13 +143,6 @@ function MainLayout() {
                         p:3
                     }}
                 >
-                    {currentTitle && (
-                        <Breadcrumbs sx={{ mb: 2 }} separator="›">
-                            <Link underline="hover" color="inherit" href="#/dashboard">Home</Link>
-                            <Typography color="text.primary" fontWeight={600}>{currentTitle}</Typography>
-                        </Breadcrumbs>
-                    )}
-
                     <Outlet />
 
                 </Box>

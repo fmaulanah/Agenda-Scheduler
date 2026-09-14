@@ -33,7 +33,7 @@ function DashboardUpcomingTable({ rows }) {
                     mb={2}
                 >
 
-                    Upcoming Agenda
+                    Agenda Hari Ini
 
                 </Typography>
 

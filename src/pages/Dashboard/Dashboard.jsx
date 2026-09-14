@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 
 import { useEffect, useState } from "react";
-import { Box, Typography, Grid } from "@mui/material";
+import { Box, Grid } from "@mui/material";
 
 
 
@@ -10,7 +10,6 @@ import DashboardSkeleton from "../../components/common/Loading/DashboardSkeleton
 
 import DashboardStat from "./components/DashboardStat";
 import DashboardMonthlyChart from "./components/DashboardMonthlyChart";
-import DashboardAgendaGauge from "./components/DashboardAgendaGauge";
 import DashboardUpcomingTable from "./components/DashboardUpcomingTable";
 
 import roomService from "../../services/roomService";
@@ -31,9 +30,7 @@ function Dashboard() {
     const [summary, setSummary] = useState({
 
         thisMonth: 0,
-        today: 0,
-        upcoming: 0,
-        running: 0
+        today: 0
 
     });
 
@@ -85,9 +82,7 @@ function Dashboard() {
             setSummary({
 
                 thisMonth: Number(summary.THIS_MONTH ?? 0),
-                today: Number(summary.TODAY ?? 0),
-                upcoming: Number(summary.UPCOMING ?? 0),
-                running: Number(summary.RUNNING ?? 0)
+                today: Number(summary.TODAY ?? 0)
 
             });
 
@@ -217,7 +212,7 @@ function Dashboard() {
                     md: 3
                 }}
             >
-                <Grid size={{ xs: 12, md: 4 }}>
+                <Grid size={{ xs: 12, md: 6 }}>
                     <DashboardStat
                         title="Schedule Bulan Ini"
                         value={summary.thisMonth}
@@ -225,21 +220,12 @@ function Dashboard() {
                     />
                 </Grid>
 
-                <Grid size={{ xs: 12, md: 4 }}>
+                <Grid size={{ xs: 12, md: 6 }}>
                     <DashboardStat
                         title="Agenda Hari Ini"
                         value={summary.today}
                         iconKey="today"
                         color="info.main"
-                    />
-                </Grid>
-
-                <Grid size={{ xs: 12, md: 4 }}>
-                    <DashboardStat
-                        title="Agenda Mendatang"
-                        value={summary.upcoming}
-                        iconKey="upcoming"
-                        color="success.main"
                     />
                 </Grid>
 

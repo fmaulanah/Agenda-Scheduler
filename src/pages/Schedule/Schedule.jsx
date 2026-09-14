@@ -607,11 +607,16 @@ function Schedule() {
                     <Box
                         sx={{
                             position: "sticky",
-                            top: 72,
+                            top: 80,
                             zIndex: 1,
-                            bgcolor: "#F5F7FA",
-                            py: 1,
-                            mb: 1.5
+                            bgcolor: "white",
+                            borderRadius: 3,
+                            px: 2,
+                            py: 1.5,
+                            mb: 1.5,
+                            border: 1,
+                            borderColor: "divider",
+                            boxShadow: 1
                         }}
                     >
                         <ScheduleToolbar

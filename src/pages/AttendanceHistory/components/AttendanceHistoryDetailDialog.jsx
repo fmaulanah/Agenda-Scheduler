@@ -167,7 +167,7 @@ function AttendanceHistoryDetailDialog({ open, onClose, agenda }) {
 
             fullWidth
 
-            maxWidth="md"
+            maxWidth="lg"
             slotProps={{ paper: { sx: { borderRadius: 3, overflow: "hidden" } } }}
 
         >
@@ -375,10 +375,10 @@ function AttendanceHistoryDetailDialog({ open, onClose, agenda }) {
                         columns={columns}
                         loading={loading}
                         getRowId={(row) => row.EMPID}
-                        density="comfortable"
+                        density="compact"
                         disableRowSelectionOnClick
-                        pageSizeOptions={[5, 10, 25]}
-                        initialState={{ pagination: { paginationModel: { pageSize: 5 } } }}
+                        pageSizeOptions={[10, 25, 50]}
+                        initialState={{ pagination: { paginationModel: { pageSize: 10 } } }}
                         slots={{ noRowsOverlay: () => <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100%" }}><Typography color="text.secondary">Tidak ada peserta.</Typography></Box> }}
                         autoHeight
 
