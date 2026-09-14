@@ -1,9 +1,9 @@
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
-import MeetingRoomIcon from "@mui/icons-material/MeetingRoom";
 import SettingsIcon from "@mui/icons-material/Settings";
 import HistoryEduIcon from "@mui/icons-material/HistoryEdu";
 import AssignmentOutlinedIcon from '@mui/icons-material/AssignmentOutlined';
+import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 
 export const MENUS = [
     {
@@ -22,18 +22,18 @@ export const MENUS = [
         id: 3,
         title: "Attendance",
         icon: AssignmentOutlinedIcon,
-        path: "/attendant"
-    },
-    {
-        id: 4,
-        title: "Attendance History",
-        icon: HistoryEduIcon,
-        path: "/attendancehistory"
+        children: [
+            { title: "Scan", path: "/attendance", icon: AssignmentOutlinedIcon },
+            { title: "History", path: "/attendance-history", icon: HistoryEduIcon }
+        ]
     },
     {
         id: 5,
         title: "System",
         icon: SettingsIcon,
-        path: "/system"
+        children: [
+            { title: "Overview", path: "/system", icon: SettingsIcon },
+            { title: "User Management", path: "/user-management", icon: ManageAccountsIcon, adminOnly: true }
+        ]
     }
 ];

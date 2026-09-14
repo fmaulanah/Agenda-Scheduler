@@ -55,7 +55,7 @@ function AttendanceHistoryFilter({
                             onChange={(e) =>
                                 onFilterChange("fromDate", e.target.value)
                             }
-                            inputlabelprops={{
+                            InputLabelProps={{
                                 shrink: true
                             }}
                         />
@@ -72,7 +72,7 @@ function AttendanceHistoryFilter({
                             onChange={(e) =>
                                 onFilterChange("toDate", e.target.value)
                             }
-                            inputlabelprops={{
+                            InputLabelProps={{
                                 shrink: true
                             }}
 
@@ -88,8 +88,8 @@ function AttendanceHistoryFilter({
                     >
 
                         <Stack
-                            justifycontent="flex-end"
-                            alignitems={{
+                            justifyContent="flex-end"
+                            alignItems={{
                                 xs: "stretch",
                                 lg: "flex-end"
                             }}

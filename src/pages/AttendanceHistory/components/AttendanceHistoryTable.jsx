@@ -234,6 +234,7 @@ function AttendanceHistoryTable({ rows, loading, onDetail }) {
                                         loading={loading}
                                         columns={columns}
                                         getRowId={(row) => row.SCHEDULE_ID}
+                                        density="comfortable"
                                         autoHeight
                                         disableRowSelectionOnClick
                                         pageSizeOptions={[5, 10, 25]}

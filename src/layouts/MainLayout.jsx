@@ -1,5 +1,5 @@
-import { Outlet } from "react-router-dom";
-import { useState } from "react";
+import { Outlet, useLocation } from "react-router-dom";
+import { useState, useMemo, useEffect } from "react";
 import { useTheme } from "@mui/material/styles";
 
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -10,15 +10,13 @@ import Header from "../components/Header/Header";
 import useMasterDataPolling from "../hooks/useMasterDataPolling";
 
 import {
-    AppBar,
-    Toolbar,
     Drawer,
     Box,
-    Typography,
     CssBaseline
 } from "@mui/material";
 
-const drawerWidth = 260;
+const DRAWER_WIDTH_EXPANDED = 260;
+const DRAWER_WIDTH_COLLAPSED = 72;
 
 function MainLayout() {
 
@@ -26,8 +24,38 @@ function MainLayout() {
 
     const theme = useTheme();
 
-    const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+    const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
     const [drawerOpen, setDrawerOpen] = useState(false);
+    const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+    const [hoverExpanded, setHoverExpanded] = useState(false);
+
+    const isHoverPreview = !isMobile && sidebarCollapsed && hoverExpanded;
+
+    const effectiveDrawerWidth = useMemo(() => {
+        if (isMobile) return DRAWER_WIDTH_EXPANDED;
+        return isHoverPreview ? DRAWER_WIDTH_EXPANDED : (sidebarCollapsed ? DRAWER_WIDTH_COLLAPSED : DRAWER_WIDTH_EXPANDED);
+    }, [isMobile, sidebarCollapsed, isHoverPreview]);
+
+    const headerLeft = useMemo(() => {
+        if (isMobile) return 0;
+        return effectiveDrawerWidth;
+    }, [isMobile, effectiveDrawerWidth]);
+
+    const sidebarIsCollapsed = !isMobile && sidebarCollapsed && !isHoverPreview;
+    const location = useLocation();
+    useEffect(() => { window.scrollTo(0, 0); }, [location.pathname]);
+    const breadcrumbMap = {
+        "/dashboard": "Dashboard",
+        "/schedule": "Schedule",
+        "/attendance": "Attendance",
+        "/attendance-history": "Attendance History",
+        "/system": "System",
+        "/user-management": "User Management",
+    };
+    const currentTitle = breadcrumbMap[location.pathname] || "";
+    useEffect(() => {
+        document.title = currentTitle ? `${currentTitle} — CSG Agenda Scheduler` : "CSG Agenda Scheduler";
+    }, [currentTitle]);
 
     return (
 
@@ -42,12 +70,35 @@ function MainLayout() {
                 ModalProps={{
                     keepMounted: true
                 }}
+                onMouseEnter={() => {
+                    if (!isMobile && sidebarCollapsed) setHoverExpanded(true);
+                }}
+                onMouseLeave={() => {
+                    if (!isMobile && sidebarCollapsed) setHoverExpanded(false);
+                }}
+                PaperProps={{
+                    elevation: isHoverPreview ? 8 : 0
+                }}
                 sx={{
-                    width: drawerWidth,
+                    width: effectiveDrawerWidth,
                     flexShrink: 0,
                     "& .MuiDrawer-paper": {
-                        width: drawerWidth,
-                        boxSizing: "border-box"
+                        width: effectiveDrawerWidth,
+                        boxSizing: "border-box",
+                        overflowX: "hidden",
+                        transition: (theme) =>
+                            theme.transitions.create("width", {
+                                easing: theme.transitions.easing.sharp,
+                                duration: theme.transitions.duration.leavingScreen
+                            }),
+                        ...(isHoverPreview && {
+                            zIndex: (theme) => theme.zIndex.drawer + 1,
+                            transition: (theme) =>
+                                theme.transitions.create("width", {
+                                    easing: theme.transitions.easing.sharp,
+                                    duration: theme.transitions.duration.enteringScreen
+                                })
+                        })
                     }
                 }}
             >
@@ -57,6 +108,8 @@ function MainLayout() {
                     <Sidebar
                         isMobile={isMobile}
                         onClose={() => setDrawerOpen(false)}
+                        isCollapsed={sidebarIsCollapsed}
+                        onToggleCollapse={setSidebarCollapsed}
                     />
 
                 </Box>
@@ -68,7 +121,8 @@ function MainLayout() {
                 sx={{
                     flexGrow: 1,
                     width: {
-                        md: `calc(100% - ${drawerWidth}px)`
+                        xs: "100%",
+                        sm: `calc(100% - ${effectiveDrawerWidth}px)`
                     },
                     bgcolor: "#F5F7FA",
                     minHeight: "100vh"
@@ -77,6 +131,10 @@ function MainLayout() {
                 <Header
                     isMobile={isMobile}
                     onMenuClick={() => setDrawerOpen(true)}
+                    sx={{
+                        left: headerLeft,
+                        width: `calc(100% - ${headerLeft}px)`
+                    }}
                 />
 
                 <Box
@@ -85,7 +143,6 @@ function MainLayout() {
                         p:3
                     }}
                 >
-
                     <Outlet />
 
                 </Box>

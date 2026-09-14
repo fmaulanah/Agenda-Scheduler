@@ -10,20 +10,20 @@ import PageHeader from "../../components/common/PageHeader/PageHeader";
 import SkeletonTable from "../../components/common/Loading/SkeletonTable";
 
 import AttendanceHistoryFilter from "./components/AttendanceHistoryFilter";
-import AttendanceHistoryToolbar from "./components/AttendanceHistoryToolbar.jsx";
 import AttendanceHistoryTable from "./components/AttendanceHistoryTable";
 import AttendanceHistoryList from "./components/AttendanceHistoryList";
 import AttendanceHistoryDetailDialog from "./components/AttendanceHistoryDetailDialog";
 
 import useResponsive from "../../hooks/useResponsive";
+import useSnackbar from "../../hooks/useSnackbar";
 
 import attendanceHistoryService from "../../services/attendanceHistoryService";
 
 function AttendanceHistory() {
 
     const { isMobile } = useResponsive();
+    const { showSnackbar } = useSnackbar();
 
-    const [view, setView] = useState("table");
     const [rows, setRows] = useState([]);
     const [loading, setLoading] = useState(false);
     const [detailOpen, setDetailOpen] = useState(false);
@@ -64,9 +64,11 @@ function AttendanceHistory() {
     };
 
     const handleSearch = () => {
-
+        if (filter.fromDate && filter.toDate && filter.fromDate > filter.toDate) {
+            showSnackbar("From Date tidak boleh melebihi To Date.", "warning");
+            return;
+        }
         loadHistory(filter);
-
     };
 
     const handleFilterChange = (field, value) => {
@@ -98,12 +100,6 @@ function AttendanceHistory() {
 
     useEffect(() => {
 
-        setView(isMobile ? "list" : "table");
-
-    }, [isMobile]);
-
-    useEffect(() => {
-
         loadHistory(filter);
 
     }, []);
@@ -119,62 +115,26 @@ function AttendanceHistory() {
 
             />
 
-            <AttendanceHistoryFilter
-
-                filter={filter}
-                onFilterChange={handleFilterChange}
-                onSearch={handleSearch}
-                loading={loading}
-
-            />
-
-            <Box
-                sx={{
-                    mt: 3
-                }}
-            >
-
-                {
-
-                    loading
-
-                        ? (
-
-                            <SkeletonTable rows={8} />
-
-                        )
-
-                        : (
-
-                            view === "table"
-
-                                ? (
-
-                                    <AttendanceHistoryTable
-
-                                        rows={rows}
-                                        onDetail={handleOpenDetail}
-
-                                    />
-
-                                )
-
-                                : (
-
-                                    <AttendanceHistoryList
-
-                                        rows={rows}
-                                        onDetail={handleOpenDetail}
-
-                                    />
-
-                                )
-
-                        )
-
-                }
-
+            <Box sx={{ position: "sticky", top: 72, zIndex: 1, bgcolor: "#F5F7FA", py: 1, mx: -3, px: 3, mb: 2 }}>
+                <AttendanceHistoryFilter
+                    filter={filter}
+                    onFilterChange={handleFilterChange}
+                    onSearch={handleSearch}
+                    loading={loading}
+                />
             </Box>
+
+            {isMobile ? (
+                loading ? (
+                    <SkeletonTable rows={5} />
+                ) : (
+                    <AttendanceHistoryList rows={rows} onDetail={handleOpenDetail} />
+                )
+            ) : loading ? (
+                <SkeletonTable rows={8} />
+            ) : (
+                <AttendanceHistoryTable rows={rows} onDetail={handleOpenDetail} />
+            )}
 
             <AttendanceHistoryDetailDialog
 

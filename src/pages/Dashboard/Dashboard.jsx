@@ -1,20 +1,15 @@
 import dayjs from "dayjs";
 
-import { useNavigate } from "react-router-dom";
-import { useEffect, useMemo, useState } from "react";
-import { Box, Chip, Divider, List, ListItem, ListItemText, Typography, Grid } from "@mui/material";
+import { useEffect, useState } from "react";
+import { Box, Grid } from "@mui/material";
 
-import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
-import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
+
 
 import PageHeader from "../../components/common/PageHeader/PageHeader";
-import AppButton from "../../components/common/Button/AppButton";
-import AppCard from "../../components/common/Card/AppCard";
 import DashboardSkeleton from "../../components/common/Loading/DashboardSkeleton";
 
 import DashboardStat from "./components/DashboardStat";
 import DashboardMonthlyChart from "./components/DashboardMonthlyChart";
-import DashboardAgendaGauge from "./components/DashboardAgendaGauge";
 import DashboardUpcomingTable from "./components/DashboardUpcomingTable";
 
 import roomService from "../../services/roomService";
@@ -25,22 +20,17 @@ import useResponsive from "../../hooks/useResponsive";
 
 function Dashboard() {
 
-    const navigate = useNavigate();
-
     const today = dayjs().format("YYYY-MM-DD");
     const currentMonth = dayjs().format("YYYYMM");
 
     const [rooms, setRooms] = useState([]);
     const [agendas, setAgendas] = useState([]);
-    const [selectedRoom, setSelectedRoom] = useState("");
     const [chartData, setChartData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [summary, setSummary] = useState({
 
         thisMonth: 0,
-        today: 0,
-        upcoming: 0,
-        running: 0
+        today: 0
 
     });
 
@@ -92,9 +82,7 @@ function Dashboard() {
             setSummary({
 
                 thisMonth: Number(summary.THIS_MONTH ?? 0),
-                today: Number(summary.TODAY ?? 0),
-                upcoming: Number(summary.UPCOMING ?? 0),
-                running: Number(summary.RUNNING ?? 0)
+                today: Number(summary.TODAY ?? 0)
 
             });
 
@@ -156,30 +144,7 @@ function Dashboard() {
 
     };
 
-    const roomMap = useMemo(() => (
-
-        Object.fromEntries(
-
-            rooms.map(room => [
-                room.ROOM_ID,
-                room.ROOM_NM
-            ])
-
-        )
-
-    ), [rooms]);
-
-    const filteredAgendas = upcomingAgendas.filter(agenda => {
-
-        if (!selectedRoom) {
-
-            return true;
-
-        }
-
-        return agenda.room === selectedRoom;
-
-    });
+    const filteredAgendas = upcomingAgendas;
 
     useEffect(() => {
 
@@ -247,29 +212,20 @@ function Dashboard() {
                     md: 3
                 }}
             >
-                <Grid size={{ xs: 12, md: 4 }}>
+                <Grid size={{ xs: 12, md: 6 }}>
                     <DashboardStat
                         title="Schedule Bulan Ini"
                         value={summary.thisMonth}
-                    //icon={<CalendarMonthIcon fontSize="large" />}
+                        iconKey="month"
                     />
                 </Grid>
 
-                <Grid size={{ xs: 12, md: 4 }}>
+                <Grid size={{ xs: 12, md: 6 }}>
                     <DashboardStat
                         title="Agenda Hari Ini"
                         value={summary.today}
-                        //icon={<CalendarTodayIcon fontSize="large" />}
+                        iconKey="today"
                         color="info.main"
-                    />
-                </Grid>
-
-                <Grid size={{ xs: 12, md: 4 }}>
-                    <DashboardStat
-                        title="Agenda Mendatang"
-                        value={summary.upcoming}
-                        //icon={<EventAvailableIcon fontSize="large" />}
-                        color="success.main"
                     />
                 </Grid>
 

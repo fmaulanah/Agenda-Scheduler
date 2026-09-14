@@ -73,7 +73,7 @@ function DashboardMonthlyChart({ data, isMobile })
 
                             <ResponsiveContainer
                                 width="100%"
-                                height={isMobile ? 170 : 280}
+                                height={isMobile ? 220 : 280}
                             >
 
                                 <BarChart
@@ -81,7 +81,7 @@ function DashboardMonthlyChart({ data, isMobile })
                                     margin={{
                                         top: 10,
                                         right: isMobile ? 5 : 20,
-                                        left: isMobile ? -25 : 0,
+                                        left: isMobile ? 0 : 0,
                                         bottom: 0
                                     }}
                                 >
@@ -108,7 +108,7 @@ function DashboardMonthlyChart({ data, isMobile })
                                     <Bar
                                         dataKey="total"
                                         radius={[8, 8, 0, 0]}
-                                        fill="#28127C"
+                                        fill="rgb(15,0,95)"
                                     />
 
                                 </BarChart>

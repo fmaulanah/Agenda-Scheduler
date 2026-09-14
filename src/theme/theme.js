@@ -29,7 +29,7 @@ const theme = createTheme({
         fontFamily:[
             "Calibri",
             "Times New Roman",
-            "Cooper"
+            "sans-serif"
         ].join(","),
 
         h4:{

@@ -4,6 +4,7 @@ import react from "@vitejs/plugin-react";
 export default defineConfig({
 
     plugins: [react()],
+    base: "./",
     server: {
 
         proxy: {
@@ -19,5 +20,5 @@ export default defineConfig({
 
     },
     // base: '/Agenda/'
-    base: '/AgendaIphone/'
+    // base: '/AgendaIphone/'
 });

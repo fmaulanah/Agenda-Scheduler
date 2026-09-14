@@ -35,6 +35,7 @@ function ConfirmDialog({
             onClose={onCancel}
             fullWidth
             maxWidth="xs"
+            slotProps={{ paper: { sx: { borderRadius: 3, overflow: "hidden" } } }}
         >
 
             <DialogTitle>
@@ -65,7 +66,7 @@ function ConfirmDialog({
                 </AppButton>
 
                 <AppButton
-                    // color={confirmColor}
+                    color={confirmColor}
                     onClick={onConfirm}
                 >
 

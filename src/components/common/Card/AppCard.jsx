@@ -44,7 +44,7 @@ function AppCard({
 
                             justifyContent:"space-between",
 
-                            alignitems:"center",
+                            alignItems:"center",
 
                             px:3,
 

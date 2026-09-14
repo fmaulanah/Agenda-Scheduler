@@ -1,10 +1,43 @@
 import dayjs from "dayjs";
 
-import { Box, Dialog, DialogActions, DialogContent, DialogTitle, Typography, Divider, Chip } from "@mui/material";
+import { Box, Dialog, DialogActions, DialogContent, DialogTitle, Typography, Divider, Chip, IconButton } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 
 import { useAuth } from "../../../context/AuthContext";
 
 import AppButton from "../../../components/common/Button/AppButton";
+
+const DetailItem = ({ label, value }) => (
+
+    <Box
+        sx={{
+            mb: 2.5
+        }}
+    >
+
+        <Typography
+            variant="h6"
+            fontWeight={200}
+            sx={{
+                mb: .5
+            }}
+        >
+
+            {label}
+
+        </Typography>
+
+        <Typography
+            variant="body1"
+        >
+
+            {value || "-"}
+
+        </Typography>
+
+    </Box>
+
+);
 
 function ScheduleAgendaDetailDialog({ agenda, rooms, open, onClose, onEdit }) {
 
@@ -20,38 +53,6 @@ function ScheduleAgendaDetailDialog({ agenda, rooms, open, onClose, onEdit }) {
         agenda &&
         String(user?.EMPID ?? "") === String(agenda.trainerId);
 
-    const DetailItem = ({ label, value }) => (
-
-        <Box
-            sx={{
-                mb: 2.5
-            }}
-        >
-
-            <Typography
-                variant="h6"
-                fontWeight={200}
-                sx={{
-                    mb: .5
-                }}
-            >
-
-                {label}
-
-            </Typography>
-
-            <Typography
-                variant="body1"
-            >
-
-                {value || "-"}
-
-            </Typography>
-
-        </Box>
-
-    );
-
     return (
 
         <Dialog
@@ -59,7 +60,9 @@ function ScheduleAgendaDetailDialog({ agenda, rooms, open, onClose, onEdit }) {
             onClose={onClose}
             fullWidth
             maxWidth="xs"
+            slotProps={{ paper: { sx: { borderRadius: 3, overflow: "hidden" } } }}
         >
+            <DialogTitle sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontWeight: 600 }}>Detail Agenda<IconButton onClick={onClose} size="small"><CloseIcon /></IconButton></DialogTitle>
             {agenda && (
 
                 <DialogContent>
@@ -120,8 +123,10 @@ function ScheduleAgendaDetailDialog({ agenda, rooms, open, onClose, onEdit }) {
                     />
 
                     <Typography
-                        variant="h6"
-                        fontWeight={200}
+                        variant="caption"
+                        color="text.secondary"
+                        fontWeight={600}
+                        sx={{ textTransform: "uppercase", letterSpacing: 0.5 }}
                     >
                         Status
                     </Typography>

@@ -16,7 +16,6 @@ import AppButton from "../../components/common/Button/AppButton";
 import Logo from "../../assets/logo/logo.png";
 
 import useSnackbar from "../../hooks/useSnackbar";
-import useResponsive from "../../hooks/useResponsive";
 
 function LoginForm() {
 
@@ -25,10 +24,11 @@ function LoginForm() {
     const [userId, setUserId] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
+    const userIdError = userId.length > 0 && userId.trim().length === 0;
+    const passwordError = password.length > 0 && password.trim().length === 0;
     
     const { login } = useAuth();
     const { showSnackbar } = useSnackbar();
-    const { isMobile} = useResponsive();
 
     const handleLogin = async () => {
 
@@ -75,7 +75,7 @@ function LoginForm() {
             await employeeService.refreshEmployees();
             await koreanService.refreshKoreans();
             
-            navigate("/dashboard");
+            navigate("/dashboard", { replace: true });
 
         } catch (err) {
 
@@ -93,48 +93,30 @@ function LoginForm() {
 
         <Box>
 
-            <Box
+            <Box sx={{ display: { xs: "flex", md: "none" }, alignItems: "center", gap: 2, mb: 3 }}>
+                <Box component="img" src={Logo} alt="CSG Logo" sx={{ width: 44, height: "auto", display: "block" }} />
+                <Typography variant="h6" fontWeight={700}>CSG Agenda Scheduler</Typography>
+            </Box>
+
+            <Typography
+                variant="h5"
                 sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    gap: 3,
-                    mb: 4,
+                    fontWeight: 700,
+                    mb: 0.5,
                 }}
             >
-                <Box
-                    component="img"
-                    src={Logo}
-                    alt="CSG Logo"
-                    sx={{
+                Login
+            </Typography>
 
-                        width: 60,
-                        height: "auto",
-                        display: "block",
-                    }}
-                />
-
-                <Box>
-                    <Typography
-                        variant= {isMobile? "h5" : "h4"}
-                        sx={{
-                            fontWeight: 700,
-                            mb: 0.5,
-                        }}
-                    >
-                        Login
-                    </Typography>
-
-                    <Typography
-                        variant="body1"
-                        sx={{
-                            color: "text.secondary",
-                        }}
-                    >
-                        CSG Agenda Scheduler
-                    </Typography>
-                </Box>
-            </Box>
+            <Typography
+                variant="body2"
+                sx={{
+                    color: "text.secondary",
+                    mb: 3
+                }}
+            >
+                Masukkan akun Anda untuk melanjutkan.
+            </Typography>
 
             <TextField
                 fullWidth
@@ -142,6 +124,12 @@ function LoginForm() {
                 margin="normal"
                 value={userId}
                 onChange={(e) => setUserId(e.target.value)}
+                onKeyDown={(e) => { if (e.key === "Enter") handleLogin(); }}
+                autoComplete="username"
+                disabled={loading}
+                required
+                error={userIdError}
+                helperText={userIdError ? "User ID tidak boleh kosong." : ""}
             />
 
             <TextField
@@ -151,32 +139,25 @@ function LoginForm() {
                 margin="normal"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                onKeyDown={(e) => { if (e.key === "Enter") handleLogin(); }}
+                autoComplete="current-password"
+                disabled={loading}
+                required
+                error={passwordError}
+                helperText={passwordError ? "Password tidak boleh kosong." : ""}
             />
 
             <AppButton
                 fullWidth
                 onClick={handleLogin}
+                loading={loading}
                 disabled={loading}
                 sx={{
                     mt: 3
                 }}
             >
-
-                {loading ? "Signing In..." : "Login"}
-
+                Login
             </AppButton>
-
-            <Typography
-                variant="body1"
-                sx={{
-                    color: "text.secondary",
-                    textAlign:"center",
-                    mt: 3
-                }}
-            >
-                v{import.meta.env.VITE_APP_VERSION} (Build {import.meta.env.VITE_APP_BUILD})
-
-            </Typography>
 
         </Box>
 

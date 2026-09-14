@@ -7,9 +7,13 @@ import UserProfile from "../common/User/UserProfile";
 function Header({
 
     isMobile,
-    onMenuClick
+    onMenuClick,
+    sx
 
 }) {
+
+    const desktopLeft = sx?.left ?? 260;
+    const desktopWidth = sx?.width ?? `calc(100% - 260px)`;
 
     return (
 
@@ -18,11 +22,9 @@ function Header({
             sx={{
                 position: "fixed",
                 top: 0,
-                left: {
-                    xs: 0,
-                    md: 260
-                },
+                left: isMobile ? 0 : desktopLeft,
                 right: 0,
+                width: isMobile ? "100%" : desktopWidth,
                 zIndex: (theme) => theme.zIndex.drawer - 1,
                 px: 4,
                 py: 3,
@@ -71,9 +73,9 @@ function Header({
                     sx={{
                         display: {
                             xs: "none",
-                            md: "flex"
+                            sm: "flex"
                         },
-                        alignitems: "center",
+                        alignItems: "center",
                         gap: 4
                     }}
                 >

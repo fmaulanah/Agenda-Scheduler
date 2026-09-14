@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
-import { Box, Chip, Dialog, DialogActions, DialogContent, DialogTitle, Divider, Stack, Typography, Tooltip } from "@mui/material";
+import { Box, Chip, Dialog, DialogActions, DialogContent, DialogTitle, Divider, Stack, Typography, Tooltip, IconButton } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 import { DataGrid } from "@mui/x-data-grid";
 
 import { displayValue, formatStatus, formatAgendaDate, formatYesNo } from "../../../utils/formatter/attendanceHistoryFormatter";
@@ -15,10 +16,9 @@ import attendanceHistoryService from "../../../services/attendanceHistoryService
 
 import AppButton from "../../../components/common/Button/AppButton";
 
-function AttendanceHistoryDetailDialog({ open, onClose, agenda }) 
-{
+function AttendanceHistoryDetailDialog({ open, onClose, agenda }) {
 
-    const [rows, setRows] = useState([]); 
+    const [rows, setRows] = useState([]);
     const [loading, setLoading] = useState(false);
 
     const status = formatStatus(
@@ -122,7 +122,7 @@ function AttendanceHistoryDetailDialog({ open, onClose, agenda })
             headerAlign: "center",
             valueGetter: (_, row) => formatYesNo(row.SCAN_OUT)
         },
-        
+
         {
             field: "SCAN_OUT_TIME",
             headerName: "Scan Out Time",
@@ -168,13 +168,13 @@ function AttendanceHistoryDetailDialog({ open, onClose, agenda })
             fullWidth
 
             maxWidth="lg"
+            slotProps={{ paper: { sx: { borderRadius: 3, overflow: "hidden" } } }}
 
         >
 
-            <DialogTitle>
-
+            <DialogTitle sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontWeight: 600 }}>
                 Attendance Detail
-
+                <IconButton onClick={onClose} size="small"><CloseIcon /></IconButton>
             </DialogTitle>
 
             <DialogContent>
@@ -198,47 +198,51 @@ function AttendanceHistoryDetailDialog({ open, onClose, agenda })
                                 {displayValue(agenda?.TRAINING_NAME)}
                             </Typography>
 
-                            <Tooltip
-                                title="Export Excel"
-                                arrow
-                            >
+                            <Stack direction="row" spacing={1} alignItems="center">
+                                <Chip label={`#${displayValue(agenda?.SCHEDULE_ID)}`} size="small" variant="outlined" />
 
-                                <span>
+                                <Tooltip
+                                    title="Export Excel"
+                                    arrow
+                                >
 
-                                    <AppButton
+                                    <span>
 
-                                        color="success"
+                                        <AppButton
 
-                                        onClick={handleExportExcel}
+                                            color="success"
 
-                                        disabled={rows.length === 0}
+                                            onClick={handleExportExcel}
 
-                                        sx={{
+                                            disabled={rows.length === 0}
 
-                                            minWidth: 42,
-                                            width: 42,
-                                            height: 42,
-                                            p: 0,
-                                            boxShadow: "none"
+                                            sx={{
 
-                                        }}
+                                                minWidth: 42,
+                                                width: 42,
+                                                height: 42,
+                                                p: 0,
+                                                boxShadow: "none"
 
-                                    >
+                                            }}
 
-                                        <FileDownloadIcon />
+                                        >
 
-                                    </AppButton>
+                                            <FileDownloadIcon />
 
-                                </span>
+                                        </AppButton>
 
-                            </Tooltip>
+                                    </span>
+
+                                </Tooltip>
+                            </Stack>
 
                         </Box>
 
                         <Stack
                             direction="row"
                             spacing={1}
-                            alignitems="center"
+                            alignItems="center"
                         >
 
                             <CalendarTodayOutlinedIcon
@@ -267,7 +271,7 @@ function AttendanceHistoryDetailDialog({ open, onClose, agenda })
                             <Stack
                                 direction="row"
                                 spacing={1}
-                                alignitems="center"
+                                alignItems="center"
                             >
 
                                 <PersonOutlineOutlinedIcon
@@ -301,7 +305,7 @@ function AttendanceHistoryDetailDialog({ open, onClose, agenda })
                             <Stack
                                 direction="row"
                                 spacing={1}
-                                alignitems="center"
+                                alignItems="center"
                             >
 
                                 <MeetingRoomOutlinedIcon
@@ -363,9 +367,7 @@ function AttendanceHistoryDetailDialog({ open, onClose, agenda })
 
                     </Stack>
 
-                    <Divider sx={{ my: 3 }} />
-
-                    <Divider />
+                    <Divider sx={{ my: 1 }} />
 
                     <DataGrid
 
@@ -373,6 +375,11 @@ function AttendanceHistoryDetailDialog({ open, onClose, agenda })
                         columns={columns}
                         loading={loading}
                         getRowId={(row) => row.EMPID}
+                        density="compact"
+                        disableRowSelectionOnClick
+                        pageSizeOptions={[10, 25, 50]}
+                        initialState={{ pagination: { paginationModel: { pageSize: 10 } } }}
+                        slots={{ noRowsOverlay: () => <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100%" }}><Typography color="text.secondary">Tidak ada peserta.</Typography></Box> }}
                         autoHeight
 
                     />
